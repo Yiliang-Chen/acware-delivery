@@ -1,6 +1,4 @@
-package top.acware.delivery.common;
-
-import top.acware.delivery.common.DeliveryException;
+package top.acware.delivery.common.exception;
 
 public class ConfigException extends DeliveryException {
 

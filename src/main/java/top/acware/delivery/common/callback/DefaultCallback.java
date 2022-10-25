@@ -10,7 +10,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
-public class AbstractCallback<T> implements Callback<T> {
+public class DefaultCallback<T> implements Callback<T> {
 
     // 当前消费位置
     private int position = 0;

@@ -1,7 +1,7 @@
 package top.acware.delivery.common.config;
 
 import lombok.extern.slf4j.Slf4j;
-import top.acware.delivery.common.ConfigException;
+import top.acware.delivery.common.exception.ConfigException;
 
 import java.util.List;
 

@@ -2,8 +2,11 @@ package top.acware.delivery.service;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 不断循环执行 doWork 方法
+ */
 @Slf4j
-public abstract class CloseableThread extends Thread{
+public abstract class CloseableThread extends Thread {
 
     private boolean running = true;
 

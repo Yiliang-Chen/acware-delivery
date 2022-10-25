@@ -5,9 +5,16 @@
   - 双十一数据大屏展示、实时数据推送等实时数据使用场景
 
 # 主要实现功能
-- Kafka 数据实时消费推送
+- 开发中
 
 # 版本功能
 - 当前版本计划
   - Kafka 数据实时推送
+
 - 当前版本已实现
+  - 0.1.0
+    - 开发中
+
+# 仓库地址
+- GitHub：https://github.com/Yiliang-Chen/acware-delivery
+- Gitee：https://gitee.com/Yiliang-Chen/acware-delivery

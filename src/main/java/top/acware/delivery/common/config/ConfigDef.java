@@ -1,6 +1,6 @@
 package top.acware.delivery.common.config;
 
-import top.acware.delivery.common.ConfigException;
+import top.acware.delivery.common.exception.ConfigException;
 import top.acware.delivery.utils.PropertiesTool;
 
 import java.util.*;

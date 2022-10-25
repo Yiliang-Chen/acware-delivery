@@ -1,4 +1,4 @@
-package top.acware.delivery.common;
+package top.acware.delivery.common.exception;
 
 /**
  * 所有 Delivery 异常基类

@@ -2,10 +2,13 @@ package top.acware.delivery.test;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import top.acware.delivery.common.callback.AbstractCallback;
+import top.acware.delivery.common.callback.DefaultCallback;
 import top.acware.delivery.common.callback.Callback;
 import top.acware.delivery.common.record.KafkaRecord;
+import top.acware.delivery.handler.channel.KafkaDefaultChannelHandler;
 import top.acware.delivery.handler.worker.KafkaConsumerWorker;
+import top.acware.delivery.handler.worker.KafkaSendMessageWorker;
+import top.acware.delivery.network.WebsocketNetworkServer;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -24,9 +27,21 @@ public class KafkaTest {
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
         consumer.subscribe(Collections.singletonList("kafka"));
-        Callback<KafkaRecord<String, String>> callback = new AbstractCallback<>();
+        Callback<KafkaRecord<String, String>> callback = new DefaultCallback<>();
         KafkaConsumerWorker<String, String> worker = new KafkaConsumerWorker<>(consumer, callback);
+
+        WebsocketNetworkServer ws = new WebsocketNetworkServer.Builder()
+                .websocketPath("/ws")
+                .inetPort(9999)
+//                .defaultHandler(new KafkaDefaultChannelHandler<String, String>(new DefaultCallback<KafkaRecord<String, String>>()))
+                .build()
+                .createDefaultServer();
+
+
         worker.start();
+        ws.start();
+
+
         new Thread(() -> {
             while (true) {
                 if (callback.canRead()) {
@@ -34,6 +49,9 @@ public class KafkaTest {
                 }
             }
         }).start();
+
+
+
         try {
             System.in.read();
         } catch (IOException e) {

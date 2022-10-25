@@ -1,4 +1,4 @@
-package top.acware.delivery.common;
+package top.acware.delivery.common.exception;
 
 public class NetworkException extends DeliveryException {
 
