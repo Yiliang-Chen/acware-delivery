@@ -28,7 +28,7 @@ public class WebsocketNetworkServer implements NetworkServer {
 
     private final NioEventLoopGroup boss;
     private final NioEventLoopGroup worker;
-    public final ServerBootstrap server;
+    private final ServerBootstrap server;
     private final String websocketPath;
     private final Integer inetPort;
     private final Integer maxContentLength;
@@ -57,9 +57,8 @@ public class WebsocketNetworkServer implements NetworkServer {
      */
     @Override
     public WebsocketNetworkServer createDefaultServer(ChannelHandler... handlers) {
-        canDefine = false;
-        this.server.handler(new LoggingHandler(LogLevel.INFO))
-                .childHandler(new ChannelInitializer<SocketChannel>() {
+        return getDefineMethod(this).defineNettyHandler(new LoggingHandler(LogLevel.INFO))
+                .defineNettyChildHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline pipeline = ch.pipeline();
@@ -72,30 +71,29 @@ public class WebsocketNetworkServer implements NetworkServer {
                         // 绑定地址
                         pipeline.addLast(new WebSocketServerProtocolHandler(websocketPath));
                         // 自定义业务逻辑
-                        if (handlers != null) {
-                            for (ChannelHandler handler : handlers) {
-                                pipeline.addLast(handlers);
-                            }
+                        if (handlers.length != 0) {
+                            log.debug(" Add define handlers");
+                            pipeline.addLast(handlers);
                         } else {
                             if (defaultHandler == null) {
                                 throw new NetworkException(" DefaultHandler is null, invoke defaultHandler method solve ");
                             } else {
                                 pipeline.addLast(defaultHandler);
+                                log.debug(" Add defaultHandler ");
                             }
                         }
                     }
-                });
-        canStart = true;
-        return null;
+                }).create();
     }
 
     /**
      * 获取自定义配置方法
      */
     @Override
-    public DefineNettyServer getDefineMethod() {
-        if (canDefine)
-            return new DefineNettyServer(this);
+    public DefineNettyServer getDefineMethod(WebsocketNetworkServer websocketNetworkServer) {
+        if (canDefine) {
+            return new DefineNettyServer(websocketNetworkServer);
+        }
         log.error(" You can't get define method, createDefaultServer method has been invoked ");
         throw new NetworkException(" You can't get define method, createServer method has been invoked ");
     }
@@ -108,7 +106,7 @@ public class WebsocketNetworkServer implements NetworkServer {
         if (canStart) {
             log.info(" [{}] WebsocketServer starting ", Thread.currentThread().getName());
             try {
-                ChannelFuture channelFuture = server.bind(inetPort).sync();
+                ChannelFuture channelFuture = this.server.bind(inetPort).sync();
                 channelFuture.channel().closeFuture().sync();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -161,6 +159,7 @@ public class WebsocketNetworkServer implements NetworkServer {
          */
         public WebsocketNetworkServer create() {
             websocketServer.canStart = true;
+            websocketServer.canDefine = false;
             return websocketServer;
         }
     }

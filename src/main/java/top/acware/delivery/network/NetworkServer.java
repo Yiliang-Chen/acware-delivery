@@ -15,6 +15,6 @@ public interface NetworkServer {
 
     void start();
 
-    WebsocketNetworkServer.DefineNettyServer getDefineMethod();
+    WebsocketNetworkServer.DefineNettyServer getDefineMethod(WebsocketNetworkServer websocketNetworkServer);
 
 }

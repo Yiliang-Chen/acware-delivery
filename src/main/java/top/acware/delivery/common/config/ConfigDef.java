@@ -41,7 +41,7 @@ public class ConfigDef {
                     return Integer.parseInt(value);
                 case SHORT:
                     return Short.parseShort(value);
-                case LONE:
+                case LONG:
                     return Long.parseLong(value);
                 case DOUBLE:
                     return Double.parseDouble(value);
@@ -70,7 +70,7 @@ public class ConfigDef {
     }
 
     public enum Type {
-        BOOLEAN, STRING, INT, SHORT, LONE, DOUBLE, LIST, CLASS
+        BOOLEAN, STRING, INT, SHORT, LONG, DOUBLE, LIST, CLASS
     }
 
 

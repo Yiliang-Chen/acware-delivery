@@ -1,4 +1,4 @@
-package top.acware.delivery.test;
+package top.acware.delivery.example;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -33,25 +33,11 @@ public class KafkaTest {
         WebsocketNetworkServer ws = new WebsocketNetworkServer.Builder()
                 .websocketPath("/ws")
                 .inetPort(9999)
-//                .defaultHandler(new KafkaDefaultChannelHandler<String, String>(new DefaultCallback<KafkaRecord<String, String>>()))
+                .defaultHandler(new KafkaDefaultChannelHandler<>(new KafkaSendMessageWorker<>(callback)))
                 .build()
                 .createDefaultServer();
-
-
         worker.start();
         ws.start();
-
-
-        new Thread(() -> {
-            while (true) {
-                if (callback.canRead()) {
-                    System.out.println(callback.read());
-                }
-            }
-        }).start();
-
-
-
         try {
             System.in.read();
         } catch (IOException e) {

@@ -17,7 +17,7 @@ public class AbstractConfig {
         this.config = configDef;
     }
 
-    protected Object get(String key) {
+    private Object get(String key) {
         if (!config.configKeys.containsKey(key)) {
             throw new ConfigException(String.format("Unknown configuration '%s'", key));
         }

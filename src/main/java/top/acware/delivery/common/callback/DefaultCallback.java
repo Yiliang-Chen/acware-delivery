@@ -78,6 +78,7 @@ public class DefaultCallback<T> implements Callback<T> {
             }
         }
         list.add(data);
+        log.debug(" Add data -> {} ", data);
         mark.incrementAndGet();
     }
 }

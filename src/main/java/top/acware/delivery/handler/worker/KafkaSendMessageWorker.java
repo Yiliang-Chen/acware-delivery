@@ -1,6 +1,5 @@
 package top.acware.delivery.handler.worker;
 
-import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import top.acware.delivery.common.callback.Callback;
 import top.acware.delivery.common.record.KafkaRecord;
@@ -10,13 +9,17 @@ public class KafkaSendMessageWorker<K, V> extends SendMessageThread {
 
     private final Callback<KafkaRecord<K, V>> callback;
 
-    public KafkaSendMessageWorker(Channel channel, Callback<KafkaRecord<K,V>> callback) {
-        super(channel);
+    public KafkaSendMessageWorker(Callback<KafkaRecord<K,V>> callback) {
+        this.callback = callback;
+    }
+
+    public KafkaSendMessageWorker(String threadName, Callback<KafkaRecord<K,V>> callback) {
+        super(threadName);
         this.callback = callback;
     }
 
     @Override
-    public void doWork() throws Exception {
+    public void work() {
         if (callback.canRead()) {
             channel.writeAndFlush(new TextWebSocketFrame((String) callback.read().getValue()));
         }

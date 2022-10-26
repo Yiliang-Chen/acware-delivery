@@ -20,7 +20,7 @@ public abstract class CloseableThread extends Thread {
     public CloseableThread(String threadName, boolean interrupt) {
         super(threadName);
         this.interrupt = interrupt;
-        this.logIdent = "[ " + getName() + " - " + getId() + " ] ";
+        this.logIdent = "[" + getName() + " - " + getId() + "] ";
     }
 
     /**
