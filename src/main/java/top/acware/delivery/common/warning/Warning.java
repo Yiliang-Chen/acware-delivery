@@ -4,8 +4,10 @@ public interface Warning {
 
     void setSubject(String subject);
 
-    void addTo(String... toEmails);
+    void setMessage(String msg);
 
-    void addCc(String... ccEmails);
+    void setAndSendMessage(String msg);
+
+    void sendMessage();
 
 }

@@ -1,23 +1,28 @@
 package top.acware.delivery.common.warning;
 
-public abstract class AbstractWarning extends Thread implements Warning {
+import top.acware.delivery.utils.ThreadPool;
+
+
+public abstract class AbstractWarning extends Thread implements Warning{
 
     public String msg;
 
-    public void setMsg(String msg) {
+    @Override
+    public void setMessage(String msg) {
         this.msg = msg;
     }
 
     @Override
-    public abstract void setSubject(String subject);
+    public abstract void sendMessage();
 
     @Override
-    public abstract void addTo(String... toEmails);
+    public void setAndSendMessage(String msg) {
+        this.msg = msg;
+        ThreadPool.getExecutor().execute(this);
+    }
 
     @Override
-    public abstract void addCc(String... ccEmails);
-
-    @Override
-    public abstract void run();
-
+    public void run() {
+        sendMessage();
+    }
 }

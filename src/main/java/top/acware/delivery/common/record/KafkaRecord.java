@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class KafkaRecord<K, V> implements Record{
+public class KafkaRecord<K, V> implements Record {
 
     private String topic;
     private int partition;

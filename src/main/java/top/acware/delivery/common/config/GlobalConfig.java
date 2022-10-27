@@ -18,6 +18,10 @@ public class GlobalConfig extends AbstractConfig{
     public static final String EMAIL_SMTP_AUTHENTICATION_PASSWORD = "email.smtp.authentication.password";
     public static final String EMAIL_SMTP_FROM_EMAIL = "email.smtp.from.email";
     public static final String EMAIL_SMTP_FROM_NAME = "email.smtp.from.name";
+    public static final String THREAD_POOL_CORE_POLL_SIZE = "thread.pool.core-pool-size";
+    public static final String THREAD_POOL_MAX_POLL_SIZE = "thread.pool.max-pool-size";
+    public static final String THREAD_POOL_KEEP_ALIVE_TIME = "thread.pool.keep-alive-time";
+    public static final String THREAD_POOL_BLOCKING_QUEUE = "thread.pool.blocking-queue";
 
     static {
         CONFIG = new ConfigDef()
@@ -29,7 +33,11 @@ public class GlobalConfig extends AbstractConfig{
                 .define(EMAIL_SMTP_AUTHENTICATION_USERNAME, ConfigDef.Type.STRING)
                 .define(EMAIL_SMTP_AUTHENTICATION_PASSWORD, ConfigDef.Type.STRING)
                 .define(EMAIL_SMTP_FROM_EMAIL, ConfigDef.Type.STRING)
-                .define(EMAIL_SMTP_FROM_NAME, ConfigDef.Type.STRING);
+                .define(EMAIL_SMTP_FROM_NAME, ConfigDef.Type.STRING)
+                .define(THREAD_POOL_CORE_POLL_SIZE, ConfigDef.Type.INT)
+                .define(THREAD_POOL_MAX_POLL_SIZE, ConfigDef.Type.INT)
+                .define(THREAD_POOL_KEEP_ALIVE_TIME, ConfigDef.Type.LONG)
+                .define(THREAD_POOL_BLOCKING_QUEUE, ConfigDef.Type.CLASS);
         instance = new GlobalConfig();
     }
 

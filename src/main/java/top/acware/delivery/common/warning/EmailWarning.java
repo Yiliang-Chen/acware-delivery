@@ -1,13 +1,14 @@
 package top.acware.delivery.common.warning;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import top.acware.delivery.common.config.GlobalConfig;
 
 @Slf4j
-public class EmailWarning extends AbstractWarning {
-    private final HtmlEmail email;
+public class EmailWarning extends AbstractEmailWarning {
+    private final Email email;
 
     {
         try {
@@ -47,10 +48,10 @@ public class EmailWarning extends AbstractWarning {
     }
 
     @Override
-    public void run() {
+    public void sendMessage() {
         try {
-            email.setMsg(msg);
-            email.send();
+            HtmlEmail clone = emailClone(email);
+            clone.setMsg(msg).send();
             log.info("Send [{}] warning email to {}, cc {}, msg = [{}]", email.getSubject(), email.getToAddresses(), email.getCcAddresses(), msg);
         } catch (EmailException e) {
             throw new RuntimeException(e);
