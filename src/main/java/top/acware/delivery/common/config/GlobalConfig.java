@@ -22,6 +22,8 @@ public class GlobalConfig extends AbstractConfig{
     public static final String THREAD_POOL_MAX_POLL_SIZE = "thread.pool.max-pool-size";
     public static final String THREAD_POOL_KEEP_ALIVE_TIME = "thread.pool.keep-alive-time";
     public static final String THREAD_POOL_BLOCKING_QUEUE = "thread.pool.blocking-queue";
+    public static final String HTTP_REQUEST_CHARSET = "http.request.charset";
+    public static final String HTTP_REQUEST_TIMEOUT = "http.request.timeout";
 
     static {
         CONFIG = new ConfigDef()
@@ -37,7 +39,9 @@ public class GlobalConfig extends AbstractConfig{
                 .define(THREAD_POOL_CORE_POLL_SIZE, ConfigDef.Type.INT)
                 .define(THREAD_POOL_MAX_POLL_SIZE, ConfigDef.Type.INT)
                 .define(THREAD_POOL_KEEP_ALIVE_TIME, ConfigDef.Type.LONG)
-                .define(THREAD_POOL_BLOCKING_QUEUE, ConfigDef.Type.CLASS);
+                .define(THREAD_POOL_BLOCKING_QUEUE, ConfigDef.Type.CLASS)
+                .define(HTTP_REQUEST_CHARSET, ConfigDef.Type.STRING)
+                .define(HTTP_REQUEST_TIMEOUT, ConfigDef.Type.INT);
         instance = new GlobalConfig();
     }
 

@@ -5,7 +5,7 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import top.acware.delivery.common.config.GlobalConfig;
 
-public abstract class AbstractEmailWarning extends AbstractWarning implements Warning {
+public abstract class AbstractEmailWarning extends AbstractWarning {
 
     public abstract void addTo(String... toEmails);
 
