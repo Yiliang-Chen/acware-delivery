@@ -26,6 +26,7 @@
 
 # 现存问题
 - @Sharable handler 无法同时打开多个连接
+  - 添加：@ChannelHandler.Sharable 注解
 # 源码编译
 # 运行实现
 # 仓库地址

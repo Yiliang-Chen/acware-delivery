@@ -42,8 +42,6 @@ public abstract class SendMessageThread extends CloseableThread{
     public void doWork() throws Exception {
         if (channels != null && !channels.isEmpty()) {
             work();
-        } else {
-            throw new NullPointerException(" Channel is null, invoke setChannel method solve ");
         }
     }
 }
