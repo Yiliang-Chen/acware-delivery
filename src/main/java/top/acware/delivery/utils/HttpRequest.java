@@ -49,17 +49,17 @@ public class HttpRequest {
         return request(url, null, method);
     }
 
-    public static String request(String url, Map<?, ?> datas, RequestMethod method) {
+    public static String request(String url, Object datas, RequestMethod method) {
         Map<String, String> headers = new HashMap<>();
         headers.put("User-Agent", "AcWare-Delivery-HttpRequest");
         return request(url, headers, datas, method);
     }
 
-    public static String request(String url, Map<String, String> headers, Map<?, ?> data, RequestMethod method) {
+    public static String request(String url, Map<String, String> headers, Object data, RequestMethod method) {
         return request(url, headers, data, method, false);
     }
 
-    public static String request(String url, Map<String, String> headers, Map<?, ?> datas, RequestMethod method, boolean toJson) {
+    public static String request(String url, Map<String, String> headers, Object datas, RequestMethod method, boolean toJson) {
         try {
             String data = null;
             if (toJson && datas != null)
@@ -80,7 +80,7 @@ public class HttpRequest {
                 if (entity != null) {
                     res = EntityUtils.toString(entity, CHARSET);
                 }
-                log.info(" HTTP connection success, response -> {} ", res);
+                log.info(" HTTP request success, response code -> {} ", code);
                 return res;
             } finally {
                 req.abort();
@@ -134,8 +134,8 @@ public class HttpRequest {
         }
     }
 
-    private static String toJson(Map<?, ?> data) {
-        if (data == null || data.isEmpty()) {
+    private static String toJson(Object data) {
+        if (data == null) {
             log.info(" Data is null or empty -> {} ", data);
             return null;
         }

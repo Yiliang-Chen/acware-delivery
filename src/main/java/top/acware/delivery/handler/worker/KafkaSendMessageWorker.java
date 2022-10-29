@@ -29,7 +29,9 @@ public class KafkaSendMessageWorker<K, V> extends SendMessageThread {
         if (callback.canRead()) {
             KafkaRecord<K, V> record = (KafkaRecord<K, V>) callback.read();
             warningRule(record);
-            channel.writeAndFlush(new TextWebSocketFrame((String) record.getValue()));
+            for (String key : channels.keySet()) {
+                channels.get(key).writeAndFlush(new TextWebSocketFrame(record.toString()));
+            }
         }
     }
 

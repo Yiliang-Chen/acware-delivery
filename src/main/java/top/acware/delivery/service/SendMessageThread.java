@@ -5,9 +5,12 @@ import top.acware.delivery.common.callback.Callback;
 import top.acware.delivery.common.record.Record;
 import top.acware.delivery.common.warning.Warning;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class SendMessageThread extends CloseableThread{
 
-    public Channel channel;
+    public Map<String, Channel> channels;
     public Callback<?> callback;
     public Warning warn;
 
@@ -20,8 +23,11 @@ public abstract class SendMessageThread extends CloseableThread{
         this.callback = callback;
     }
 
-    public void setChannel(Channel channel) {
-        this.channel = channel;
+    public void setChannel(String key, Channel channel) {
+        if (channels == null) {
+            channels = new HashMap<>();
+        }
+        this.channels.put(key, channel);
     }
 
     public void addWarnMethod(Warning warn) {
@@ -34,7 +40,7 @@ public abstract class SendMessageThread extends CloseableThread{
 
     @Override
     public void doWork() throws Exception {
-        if (channel != null) {
+        if (channels != null && !channels.isEmpty()) {
             work();
         } else {
             throw new NullPointerException(" Channel is null, invoke setChannel method solve ");

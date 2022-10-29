@@ -3,9 +3,13 @@ package top.acware.delivery.common;
 import org.junit.Test;
 import top.acware.delivery.common.config.GlobalConfig;
 import top.acware.delivery.common.warning.EmailWarning;
+import top.acware.delivery.common.warning.HttpWarning;
+import top.acware.delivery.utils.HttpRequest;
 import top.acware.delivery.utils.ThreadPool;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CommonTest {
 
@@ -27,6 +31,21 @@ public class CommonTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void http() {
+        HttpWarning httpWarning = new HttpWarning();
+        Map<String, String> header = new HashMap<>();
+        header.put("Content-Type", "application/json");
+        httpWarning.setHeaders(header);
+        Map<String, String> data = new HashMap<>();
+        data.put("value", "0");
+        httpWarning.setData(data);
+        httpWarning.setMethod(HttpRequest.RequestMethod.POST);
+        httpWarning.setToJson(true);
+        httpWarning.setUrl("http://www.acware.top:9910/api/data/scroll");
+        httpWarning.sendMessage();
     }
 
 }

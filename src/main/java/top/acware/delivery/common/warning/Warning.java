@@ -2,11 +2,11 @@ package top.acware.delivery.common.warning;
 
 public interface Warning {
 
-    void setSubject(String subject);
+    void setSubject(Object subject);
 
-    void setMessage(String msg);
+    void setMessage(Object msg);
 
-    void setAndSendMessage(String msg);
+    void setAndSendMessage(Object msg);
 
     void sendMessage();
 
