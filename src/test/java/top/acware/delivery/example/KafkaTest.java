@@ -6,14 +6,18 @@ import top.acware.delivery.common.callback.DefaultCallback;
 import top.acware.delivery.common.callback.Callback;
 import top.acware.delivery.common.record.KafkaRecord;
 import top.acware.delivery.common.warning.EmailWarning;
+import top.acware.delivery.common.warning.HttpWarning;
 import top.acware.delivery.handler.channel.DefaultChannelHandler;
 import top.acware.delivery.handler.worker.KafkaConsumerWorker;
 import top.acware.delivery.handler.worker.KafkaSendMessageWorker;
 import top.acware.delivery.network.WebsocketNetworkServer;
+import top.acware.delivery.utils.HttpRequest;
 import top.acware.delivery.utils.ThreadPool;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class KafkaTest {
@@ -33,14 +37,24 @@ public class KafkaTest {
         KafkaConsumerWorker<String, String> worker = new KafkaConsumerWorker<>(consumer, callback);
         ThreadPool.getExecutor().execute(worker);
 
-        EmailWarning emailWarning = new EmailWarning();
-        emailWarning.addTo("18177410488@163.com");
-        emailWarning.addCc("1982455737@qq.com");
+        /* Email Warning */
+//        EmailWarning emailWarning = new EmailWarning();
+//        emailWarning.addTo("18177410488@163.com");
+//        emailWarning.addCc("1982455737@qq.com");
+
+        HttpWarning httpWarning = new HttpWarning();
+        httpWarning.setUrl("https://www.baidu.com");
+        Map<String, String> header = new HashMap<>();
+        header.put("Content-Type", "application/json");
+        httpWarning.setHeaders(header);
+        httpWarning.setMethod(HttpRequest.RequestMethod.GET);
+        httpWarning.setToJson(false);
 
         WebsocketNetworkServer ws = new WebsocketNetworkServer.Builder()
                 .websocketPath("/ws")
                 .inetPort(9999)
-                .defaultHandler(new DefaultChannelHandler(new KafkaSendMessageWorker<>(callback), emailWarning))
+                .defaultHandler(new DefaultChannelHandler(new KafkaSendMessageWorker<>(callback), httpWarning))
+//                .defaultHandler(new DefaultChannelHandler(new KafkaSendMessageWorker<>(callback), emailWarning))
                 .build()
                 .createDefaultServer();
         ws.start();

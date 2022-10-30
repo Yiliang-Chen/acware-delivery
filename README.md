@@ -4,7 +4,7 @@
   - 目前功能实现 
     - Websocket 接口配置化实现
     - Kafka Topic 订阅推送
-    - 告警事件消息反馈（Email）
+    - 告警事件消息反馈（Email、Http）
   - 未来版本功能蓝图
     - 告警事件消息反馈（Email、Http）
 - 使用场景
@@ -28,6 +28,32 @@
 - @Sharable handler 无法同时打开多个连接
   - 添加：@ChannelHandler.Sharable 注解
 # 源码编译
+```shell
+mvn clean package -Dmaven.test.skip=true
+```
+# 配置文件（delivery.properties）
+```properties
+callback.limit=5
+
+kafka.poll-timeout=1000
+
+netty.max-content-length=8192
+
+email.smtp.hostname=smtp.sina.com
+email.smtp.charset=UTF-8
+email.smtp.authentication.username=AcWare@acware.top
+email.smtp.authentication.password=PASSWORD
+email.smtp.from.email=AcWare@acware.top
+email.smtp.from.name=AcWare-Delivery
+
+thread.pool.core-pool-size=6
+thread.pool.max-pool-size=18
+thread.pool.keep-alive-time=200
+thread.pool.blocking-queue=java.util.concurrent.LinkedBlockingQueue
+
+http.request.charset=UTF-8
+http.request.timeout=60000
+```
 # 运行实现
 # 仓库地址
 - GitHub：https://github.com/Yiliang-Chen/acware-delivery

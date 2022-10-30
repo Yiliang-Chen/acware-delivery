@@ -3,7 +3,7 @@ package top.acware.delivery.service;
 import io.netty.channel.Channel;
 import top.acware.delivery.common.callback.Callback;
 import top.acware.delivery.common.record.Record;
-import top.acware.delivery.common.warning.Warning;
+import top.acware.delivery.common.warning.AbstractWarning;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ public abstract class SendMessageThread extends CloseableThread{
 
     public Map<String, Channel> channels;
     public Callback<?> callback;
-    public Warning warn;
+    public AbstractWarning warn;
 
     public SendMessageThread(Callback<?> callback) {
         this("SendMessageThread - " + Thread.currentThread().getId(), callback);
@@ -30,7 +30,7 @@ public abstract class SendMessageThread extends CloseableThread{
         this.channels.put(key, channel);
     }
 
-    public void addWarnMethod(Warning warn) {
+    public void addWarnMethod(AbstractWarning warn) {
         this.warn = warn;
     }
 

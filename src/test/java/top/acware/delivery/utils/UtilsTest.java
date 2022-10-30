@@ -9,7 +9,7 @@ public class UtilsTest {
 
     @Test
     public void properties() {
-        System.out.println(new PropertiesTool().getProperties("server.properties").getProperty("callback.limit"));
+        System.out.println(new PropertiesTool().getProperties("delivery.properties").getProperty("callback.limit"));
     }
 
     @Test

@@ -4,7 +4,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
-import top.acware.delivery.common.warning.Warning;
+import top.acware.delivery.common.warning.AbstractWarning;
 import top.acware.delivery.service.SendMessageThread;
 import top.acware.delivery.utils.ThreadPool;
 
@@ -20,7 +20,7 @@ public class DefaultChannelHandler extends ChannelInboundHandlerAdapter {
 
     private boolean sendWorkerStart = false;
 
-    public DefaultChannelHandler(SendMessageThread sendWorker, Warning warn) {
+    public DefaultChannelHandler(SendMessageThread sendWorker, AbstractWarning warn) {
         this.sendWorker = sendWorker;
         if (warn != null) {
             this.sendWorker.addWarnMethod(warn);

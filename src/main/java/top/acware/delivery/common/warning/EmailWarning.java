@@ -9,6 +9,7 @@ import top.acware.delivery.common.config.GlobalConfig;
 @Slf4j
 public class EmailWarning extends AbstractWarning {
     private final Email email;
+    private String msg;
 
     {
         try {
@@ -24,7 +25,6 @@ public class EmailWarning extends AbstractWarning {
         }
     }
 
-    @Override
     public void setSubject(Object subject) {
         email.setSubject((String) subject);
     }
@@ -45,11 +45,15 @@ public class EmailWarning extends AbstractWarning {
         }
     }
 
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     @Override
     public void sendMessage() {
         try {
             HtmlEmail clone = emailClone(email);
-            clone.setMsg((String) msg).send();
+            clone.setMsg(msg).send();
             log.info("Send [{}] warning email to {}, cc {}, msg = [{}]", email.getSubject(), email.getToAddresses(), email.getCcAddresses(), msg);
         } catch (EmailException e) {
             throw new RuntimeException(e);

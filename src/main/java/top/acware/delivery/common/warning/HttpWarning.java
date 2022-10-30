@@ -7,6 +7,7 @@ import java.util.Map;
 public class HttpWarning extends AbstractWarning{
 
     public Map<String, String> headers;
+    public Object data;
     public String url;
     public HttpRequest.RequestMethod method;
     public boolean toJson = false;
@@ -20,15 +21,7 @@ public class HttpWarning extends AbstractWarning{
         if (url == null) {
             throw new NullPointerException(" URL is null, invoke setUrl method set ");
         }
-        HttpRequest.request(url, headers, msg, method, toJson);
-    }
-
-    @Deprecated
-    @Override
-    public void setSubject(Object subject) {}
-
-    public void setAndSendRequest(Object data) {
-        super.setAndSendMessage(data);
+        HttpRequest.request(url, headers, data, method, toJson);
     }
 
     public void setUrl(String url) {
@@ -44,7 +37,7 @@ public class HttpWarning extends AbstractWarning{
     }
 
     public void setData(Object data) {
-        super.setMessage(data);
+        this.data = data;
     }
 
 }

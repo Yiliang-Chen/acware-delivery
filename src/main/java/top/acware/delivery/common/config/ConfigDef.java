@@ -12,7 +12,7 @@ public class ConfigDef {
 
     public final Map<String ,Object> configKeys = new HashMap<>();
 
-    private final Properties property = new PropertiesTool().getProperties("server.properties");
+    private final Properties property = new PropertiesTool().getProperties("delivery.properties");
 
     public ConfigDef define(String name, Type type){
         if (configKeys.containsKey(name)) {
