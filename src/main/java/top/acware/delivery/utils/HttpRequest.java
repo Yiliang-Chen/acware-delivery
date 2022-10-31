@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
+/**
+ * 发起 Http 请求的工具类
+ */
 @Slf4j
 public class HttpRequest {
 

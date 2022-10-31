@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UtilsTest {
+public class Utils {
 
     @Test
     public void properties() {

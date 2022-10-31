@@ -2,17 +2,19 @@ package top.acware.delivery.service;
 
 import io.netty.channel.Channel;
 import top.acware.delivery.common.callback.Callback;
-import top.acware.delivery.common.record.Record;
-import top.acware.delivery.common.warning.AbstractWarning;
+import top.acware.delivery.common.warning.WarnRule;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 发送数据的线程基类
+ */
 public abstract class SendMessageThread extends CloseableThread{
 
     public Map<String, Channel> channels;
     public Callback<?> callback;
-    public AbstractWarning warn;
+    public WarnRule warn;
 
     public SendMessageThread(Callback<?> callback) {
         this("SendMessageThread - " + Thread.currentThread().getId(), callback);
@@ -30,11 +32,9 @@ public abstract class SendMessageThread extends CloseableThread{
         this.channels.put(key, channel);
     }
 
-    public void addWarnMethod(AbstractWarning warn) {
+    public void addWarnMethod(WarnRule warn) {
         this.warn = warn;
     }
-
-    public void warningRule(Record record) {}
 
     public abstract void work();
 

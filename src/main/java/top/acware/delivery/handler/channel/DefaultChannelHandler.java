@@ -5,12 +5,13 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 import top.acware.delivery.common.warning.AbstractWarning;
+import top.acware.delivery.common.warning.WarnRule;
 import top.acware.delivery.service.SendMessageThread;
 import top.acware.delivery.utils.ThreadPool;
 
 /**
  * 默认 ChannelHandler
- * 可以继承之后重写方法
+ * 可以继承该类重写方法
  */
 @Slf4j
 @ChannelHandler.Sharable
@@ -20,11 +21,13 @@ public class DefaultChannelHandler extends ChannelInboundHandlerAdapter {
 
     private boolean sendWorkerStart = false;
 
-    public DefaultChannelHandler(SendMessageThread sendWorker, AbstractWarning warn) {
+    public DefaultChannelHandler(SendMessageThread sendWorker) {
         this.sendWorker = sendWorker;
-        if (warn != null) {
-            this.sendWorker.addWarnMethod(warn);
-        }
+    }
+
+    public DefaultChannelHandler(SendMessageThread sendWorker, WarnRule warn) {
+        this.sendWorker = sendWorker;
+        this.sendWorker.addWarnMethod(warn);
     }
 
     /**

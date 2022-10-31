@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommonTest {
+public class Common {
 
     @Test
     public void test() {

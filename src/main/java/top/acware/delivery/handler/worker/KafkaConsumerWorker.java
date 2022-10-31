@@ -8,6 +8,9 @@ import top.acware.delivery.common.config.GlobalConfig;
 import top.acware.delivery.common.record.KafkaRecord;
 import top.acware.delivery.service.CloseableThread;
 
+/**
+ * Kafka 消费者类
+ */
 public class KafkaConsumerWorker<K, V> extends CloseableThread {
 
     private final KafkaConsumer<K, V> consumer;

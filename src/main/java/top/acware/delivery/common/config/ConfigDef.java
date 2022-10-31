@@ -7,6 +7,7 @@ import java.util.*;
 
 /**
  * 统一从配置文件获取 并 存储配置信息
+ * 注意：必须存在 delivery.properties 配置
  */
 public class ConfigDef {
 

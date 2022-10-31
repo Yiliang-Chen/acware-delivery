@@ -4,6 +4,9 @@ import top.acware.delivery.common.config.GlobalConfig;
 
 import java.util.concurrent.*;
 
+/**
+ * 线程池
+ */
 public class ThreadPool {
 
     private static ExecutorService executor;

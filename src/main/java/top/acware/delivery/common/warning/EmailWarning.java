@@ -6,6 +6,9 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import top.acware.delivery.common.config.GlobalConfig;
 
+/**
+ * 邮件告警
+ */
 @Slf4j
 public class EmailWarning extends AbstractWarning {
     private final Email email;
@@ -25,10 +28,12 @@ public class EmailWarning extends AbstractWarning {
         }
     }
 
+    // 设置主题
     public void setSubject(Object subject) {
         email.setSubject((String) subject);
     }
 
+    // 设置收件人
     public void addTo(String... toEmails) {
         try {
             email.addTo(toEmails);
@@ -37,6 +42,7 @@ public class EmailWarning extends AbstractWarning {
         }
     }
 
+    // 设置抄送人
     public void addCc(String... ccEmails) {
         try {
             email.addCc(ccEmails);
@@ -45,6 +51,7 @@ public class EmailWarning extends AbstractWarning {
         }
     }
 
+    // 设置消息
     public void setMsg(String msg) {
         this.msg = msg;
     }
@@ -60,6 +67,7 @@ public class EmailWarning extends AbstractWarning {
         }
     }
 
+    // 每次 HtmlEmail 只能发送一条，需要克隆当前对象
     public HtmlEmail emailClone(Email email) {
         HtmlEmail clone = new HtmlEmail();
         try {

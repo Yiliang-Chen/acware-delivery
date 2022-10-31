@@ -30,6 +30,9 @@ public class DefaultCallback<T> implements Callback<T> {
         limit = GlobalConfig.getInstance().getInt(GlobalConfig.CALLBACK_LIMIT);
     }
 
+    /**
+     * 判断是否刻度
+     */
     @Override
     public boolean canRead() {
         if (position < mark.get())
@@ -37,6 +40,9 @@ public class DefaultCallback<T> implements Callback<T> {
         return false;
     }
 
+    /**
+     * 修改状态，修改期间不允许读
+     */
     @Override
     public boolean updateStatus() {
         readLock.lock();
@@ -58,6 +64,9 @@ public class DefaultCallback<T> implements Callback<T> {
         return true;
     }
 
+    /**
+     * 读取数据，读取期间不允许修改状态
+     */
     @Override
     public T read() {
         readLock.lock();
@@ -70,6 +79,9 @@ public class DefaultCallback<T> implements Callback<T> {
         }
     }
 
+    /**
+     * 写数据
+     */
     @Override
     public void write(T data) {
         if (list.size() >= limit) {

@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Kafka 消息的部分内容封装
+ */
 @Getter
 @Setter
 @ToString

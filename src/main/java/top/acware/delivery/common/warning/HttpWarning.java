@@ -4,6 +4,9 @@ import top.acware.delivery.utils.HttpRequest;
 
 import java.util.Map;
 
+/**
+ * 调用 Http 接口发送告警
+ */
 public class HttpWarning extends AbstractWarning{
 
     public Map<String, String> headers;
@@ -20,6 +23,9 @@ public class HttpWarning extends AbstractWarning{
     public void sendMessage() {
         if (url == null) {
             throw new NullPointerException(" URL is null, invoke setUrl method set ");
+        }
+        if (method == null) {
+            method = HttpRequest.RequestMethod.GET;
         }
         HttpRequest.request(url, headers, data, method, toJson);
     }
