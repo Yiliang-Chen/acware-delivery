@@ -3,16 +3,14 @@ package top.acware.delivery.service;
 import io.netty.channel.Channel;
 import top.acware.delivery.common.callback.Callback;
 import top.acware.delivery.common.warning.WarnRule;
-
-import java.util.HashMap;
-import java.util.Map;
+import top.acware.delivery.utils.CopyOnWriteMap;
 
 /**
  * 发送数据的线程基类
  */
 public abstract class SendMessageThread extends CloseableThread{
 
-    public Map<String, Channel> channels;
+    public CopyOnWriteMap<String, Channel> channels;
     public Callback<?> callback;
     public WarnRule warn;
 
@@ -25,17 +23,20 @@ public abstract class SendMessageThread extends CloseableThread{
         this.callback = callback;
     }
 
+    /* 设置 channel */
     public void setChannel(String key, Channel channel) {
         if (channels == null) {
-            channels = new HashMap<>();
+            channels = new CopyOnWriteMap<>();
         }
         this.channels.put(key, channel);
     }
 
+    /* 添加告警方法 */
     public void addWarnMethod(WarnRule warn) {
         this.warn = warn;
     }
 
+    /* 主要工作类 */
     public abstract void work();
 
     @Override

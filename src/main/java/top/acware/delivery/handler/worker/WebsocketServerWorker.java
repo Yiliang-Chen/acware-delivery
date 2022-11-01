@@ -30,14 +30,17 @@ public class WebsocketServerWorker extends WorkerThread implements NettyNetwork 
     private final NioEventLoopGroup boss;
     private final NioEventLoopGroup worker;
     private final ServerBootstrap server;
+    /* Websocket 服务地址 */
     private final String websocketPath;
+    /* 绑定端口 */
     private final Integer inetPort;
     private final Integer maxContentLength;
     private boolean setChildHandler = true;
+    /* 配置默认 handler */
     private final DefaultChannelHandler defaultHandler;
     private boolean setHandler = true;
     private boolean start = false;
-    private boolean define;
+    private final boolean define;
 
     public WebsocketServerWorker(Builder builder) {
         if (builder.bossThreads == null)

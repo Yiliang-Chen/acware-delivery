@@ -26,13 +26,17 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
     private final NioEventLoopGroup bossGroup;
     private final NioEventLoopGroup workerGroup;
     private final ServerBootstrap bootstrap;
+    /* Http 请求方式 */
     private final HttpMethod method;
+    /* Http 请求的 URI */
     private final String uri;
     private final Callback<StringRecord> callback;
+    /* 绑定的端口 */
     private final Integer inetPort;
     private boolean setChildHandler = true;
     private boolean setHandler = true;
     private boolean start = false;
+    /* 是否是自定义 */
     private final boolean define;
     private final Integer maxContentLength;
 
@@ -97,6 +101,7 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
                             log.debug("Headers: {}, Method: {}, URI: {}, data: {}",
                                     msg.headers(), msg.method(), msg.uri(), record);
                             if (method == msg.method() && uri.equals(msg.uri())) {
+                                // 将接收到到数据写入回调函数
                                 callback.write(new StringRecord(record));
                                 ctx.writeAndFlush(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK));
                                 ctx.close();

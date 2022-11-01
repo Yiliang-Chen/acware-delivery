@@ -32,6 +32,7 @@ public class DefaultChannelHandler extends ChannelInboundHandlerAdapter {
 
     /**
      * 连接触发
+     * 将当前连接的 channel 添加到发送列表，首次连接会启动发送线程
      */
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
@@ -45,12 +46,14 @@ public class DefaultChannelHandler extends ChannelInboundHandlerAdapter {
 
     /**
      * 断连触发
+     * 将当前连接的 channel 从队列中删除，队列中没有连接将关闭线程
      */
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         log.debug(" HandlerRemoved invoke - {} ", ctx.channel().id().asLongText());
         sendWorker.channels.remove(ctx.channel().id().asLongText());
         if (sendWorker.channels.isEmpty()) {
+            sendWorkerStart = false;
             sendWorker.shutdown();
         }
     }
@@ -61,7 +64,7 @@ public class DefaultChannelHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.error(" Exception occur: {}", cause.getMessage());
-        sendWorker.shutdown();
+        handlerRemoved(ctx);
         ctx.close();
     }
 

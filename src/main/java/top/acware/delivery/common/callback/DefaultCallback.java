@@ -31,7 +31,7 @@ public class DefaultCallback<T> implements Callback<T> {
     }
 
     /**
-     * 判断是否刻度
+     * 判断是否可读
      */
     @Override
     public boolean canRead() {

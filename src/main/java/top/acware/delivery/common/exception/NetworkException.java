@@ -1,5 +1,8 @@
 package top.acware.delivery.common.exception;
 
+/**
+ * 网络创建异常
+ */
 public class NetworkException extends DeliveryException {
 
     private static final long serialVersionUID = 1L;

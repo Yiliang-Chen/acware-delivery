@@ -95,6 +95,7 @@ public class HttpRequest {
         }
     }
 
+    /* 设置 headers */
     private static HttpUriRequest setHeaders(HttpUriRequest req, Map<String, String> headers) {
         if (headers != null && !headers.isEmpty()) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -107,6 +108,7 @@ public class HttpRequest {
         return req;
     }
 
+    /* 创建对应请求方式的请求 */
     private static HttpUriRequest getMethodRequest(String url, RequestMethod method, String data) {
         if (url.isEmpty()) {
             log.error(" URL is empty, please check. ");
@@ -137,6 +139,7 @@ public class HttpRequest {
         }
     }
 
+    /* 数据转 JSON */
     private static String toJson(Object data) {
         if (data == null) {
             log.info(" Data is null or empty -> {} ", data);

@@ -8,8 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class WorkerThread extends Thread {
 
+    /**
+     * 启动服务
+     */
     public abstract void start();
 
+    /**
+     * 关闭服务
+     */
     public abstract void serverShutdown();
 
     @Override
@@ -17,4 +23,5 @@ public abstract class WorkerThread extends Thread {
         log.debug(" WorkerThread {} start ", Thread.currentThread().getName());
         start();
     }
+
 }

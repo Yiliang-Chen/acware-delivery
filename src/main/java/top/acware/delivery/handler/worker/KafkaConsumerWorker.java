@@ -31,8 +31,10 @@ public class KafkaConsumerWorker<K, V> extends CloseableThread {
 
     @Override
     public void doWork() throws Exception {
+        // 拉取数据
         ConsumerRecords<K, V> records = consumer.poll(poll_timeout);
         for (ConsumerRecord<K, V> record : records) {
+            // 写入 callback
             callback.write(new KafkaRecord<K, V>(
                     record.topic(),
                     record.partition(),

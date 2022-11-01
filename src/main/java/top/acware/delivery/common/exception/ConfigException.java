@@ -1,5 +1,8 @@
 package top.acware.delivery.common.exception;
 
+/**
+ * 配置获取异常
+ */
 public class ConfigException extends DeliveryException {
 
     private static final long serialVersionUID = 1L;

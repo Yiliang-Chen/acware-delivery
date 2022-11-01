@@ -9,20 +9,34 @@ public class GlobalConfig extends AbstractConfig{
 
     private static final GlobalConfig instance;
 
+    /* 回调函数刷新条数 */
     public static final String CALLBACK_LIMIT = "callback.limit";
+    /* Kafka 拉取数据超时时间 */
     public static final String KAFKA_POLL_TIMEOUT = "kafka.poll-timeout";
+    /* Netty 接收数据最大长度 */
     public static final String NETTY_MAX_CONTENT_LENGTH = "netty.max-content-length";
+    /* Email smtp 的地址 */
     public static final String EMAIL_SMTP_HOSTNAME = "email.smtp.hostname";
     public static final String EMAIL_SMTP_CHARSET = "email.smtp.charset";
+    /* 发送邮件的账号 */
     public static final String EMAIL_SMTP_AUTHENTICATION_USERNAME = "email.smtp.authentication.username";
+    /* 发送邮件的密码(有些是授权码) */
     public static final String EMAIL_SMTP_AUTHENTICATION_PASSWORD = "email.smtp.authentication.password";
+    /* 发送邮件的账号 */
     public static final String EMAIL_SMTP_FROM_EMAIL = "email.smtp.from.email";
+    /* 发送邮件的账号名称 */
     public static final String EMAIL_SMTP_FROM_NAME = "email.smtp.from.name";
+    /* 线程池核心线程大小 */
     public static final String THREAD_POOL_CORE_POLL_SIZE = "thread.pool.core-pool-size";
+    /* 线程池最大线程数量 */
     public static final String THREAD_POOL_MAX_POLL_SIZE = "thread.pool.max-pool-size";
+    /* 线程池多余的空闲线程存活时间 */
     public static final String THREAD_POOL_KEEP_ALIVE_TIME = "thread.pool.keep-alive-time";
+    /* 线程池工作队列的 Class */
     public static final String THREAD_POOL_BLOCKING_QUEUE = "thread.pool.blocking-queue";
+    /* Http 请求编码 */
     public static final String HTTP_REQUEST_CHARSET = "http.request.charset";
+    /* Http 请求超时时间 */
     public static final String HTTP_REQUEST_TIMEOUT = "http.request.timeout";
 
     static {
