@@ -8,7 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.*;
 import lombok.extern.slf4j.Slf4j;
 import top.acware.delivery.common.callback.Callback;
-import top.acware.delivery.common.config.GlobalConfig;
+import top.acware.delivery.common.config.DefaultConfig;
 import top.acware.delivery.common.exception.BuilderException;
 import top.acware.delivery.common.exception.NetworkException;
 import top.acware.delivery.common.record.StringRecord;
@@ -54,7 +54,7 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
         this.uri = builder.uri;
         this.callback = builder.callback;
         this.inetPort = builder.inetPort;
-        this.maxContentLength = GlobalConfig.getInstance().getInt(GlobalConfig.NETTY_MAX_CONTENT_LENGTH);
+        this.maxContentLength = DefaultConfig.DeliveryConfig.NETTY_MAX_CONTENT_LENGTH;
         this.bootstrap = new ServerBootstrap()
                 .group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class);

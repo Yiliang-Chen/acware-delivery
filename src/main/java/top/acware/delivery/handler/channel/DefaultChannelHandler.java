@@ -40,7 +40,7 @@ public class DefaultChannelHandler extends ChannelInboundHandlerAdapter {
         sendWorker.setChannel(ctx.channel().id().asLongText(), ctx.channel());
         if (!sendWorkerStart) {
             sendWorkerStart = true;
-            ThreadPool.getExecutor().execute(sendWorker);
+            ThreadPool.executor(sendWorker);
         }
     }
 

@@ -15,7 +15,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import lombok.extern.slf4j.Slf4j;
-import top.acware.delivery.common.config.GlobalConfig;
+import top.acware.delivery.common.config.DefaultConfig;
 import top.acware.delivery.common.exception.NetworkException;
 import top.acware.delivery.handler.channel.DefaultChannelHandler;
 import top.acware.delivery.service.NettyNetwork;
@@ -55,7 +55,7 @@ public class WebsocketServerWorker extends WorkerThread implements NettyNetwork 
         this.websocketPath = builder.websocketPath;
         this.inetPort = builder.inetPort;
         this.defaultHandler = builder.defaultHandler;
-        this.maxContentLength = GlobalConfig.getInstance().getInt(GlobalConfig.NETTY_MAX_CONTENT_LENGTH);
+        this.maxContentLength = DefaultConfig.DeliveryConfig.NETTY_MAX_CONTENT_LENGTH;
         this.server = new ServerBootstrap().group(boss, worker).channel(NioServerSocketChannel.class);
     }
 

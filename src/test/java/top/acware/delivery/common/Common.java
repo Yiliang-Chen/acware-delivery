@@ -1,7 +1,9 @@
 package top.acware.delivery.common;
 
+import lombok.ToString;
 import org.junit.Test;
-import top.acware.delivery.common.config.GlobalConfig;
+import top.acware.delivery.common.config.ConfigDef;
+import top.acware.delivery.common.config.DefaultConfig;
 import top.acware.delivery.common.warning.EmailWarning;
 import top.acware.delivery.common.warning.HttpWarning;
 import top.acware.delivery.utils.HttpRequest;
@@ -15,7 +17,12 @@ public class Common {
 
     @Test
     public void test() {
-        System.out.println(GlobalConfig.getInstance().getInt(GlobalConfig.CALLBACK_LIMIT));
+        System.out.println(DefaultConfig.DeliveryConfig.CALLBACK_LIMIT);
+    }
+
+    @Test
+    public void config() {
+        System.out.println(DefaultConfig.getConfig().configKeys);
     }
 
     @Test
@@ -25,7 +32,7 @@ public class Common {
         emailWarning.addTo("18177410488@163.com");
         emailWarning.addCc("1982455737@qq.com");
         emailWarning.setMsg("AcWare Delivery 告警信息测试");
-        ThreadPool.getExecutor().execute(emailWarning);
+        ThreadPool.executor(emailWarning);
         try {
             System.in.read();
         } catch (IOException e) {

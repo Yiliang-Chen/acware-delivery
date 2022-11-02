@@ -1,6 +1,6 @@
 package top.acware.delivery.utils;
 
-import top.acware.delivery.common.config.GlobalConfig;
+import top.acware.delivery.common.config.DefaultConfig;
 
 import java.util.concurrent.*;
 
@@ -11,25 +11,37 @@ public class ThreadPool {
 
     private static ExecutorService executor;
 
-    public static ExecutorService getExecutor() {
+    private static ExecutorService getExecutor() {
         if (executor == null || executor.isShutdown())
             init();
         return executor;
     }
 
+    public static void executor(Runnable work) {
+        getExecutor().execute(work);
+    }
+
     private synchronized static void init() {
-        if (executor == null || executor.isShutdown()) {
-            try {
-                executor = new ThreadPoolExecutor(GlobalConfig.getInstance().getInt(GlobalConfig.THREAD_POOL_CORE_POLL_SIZE),
-                        GlobalConfig.getInstance().getInt(GlobalConfig.THREAD_POOL_MAX_POLL_SIZE),
-                        GlobalConfig.getInstance().getLong(GlobalConfig.THREAD_POOL_KEEP_ALIVE_TIME),
-                        TimeUnit.MILLISECONDS,
-                        (BlockingQueue<Runnable>) GlobalConfig.getInstance().getClass(GlobalConfig.THREAD_POOL_BLOCKING_QUEUE).newInstance()
-                );
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        if (executor == null || executor.isShutdown())
+            executor = DefaultConfig.DeliveryConfig.THREAD_POOL_QUEUE_SIZE < 0 ? new ThreadPoolExecutor(
+                    DefaultConfig.DeliveryConfig.THREAD_POOL_CORE_POLL_SIZE,
+                    DefaultConfig.DeliveryConfig.THREAD_POOL_MAX_POLL_SIZE,
+                    DefaultConfig.DeliveryConfig.THREAD_POOL_KEEP_ALIVE_TIME,
+                    TimeUnit.MILLISECONDS,
+                    new LinkedBlockingQueue<>()
+            ) : DefaultConfig.DeliveryConfig.THREAD_POOL_QUEUE_SIZE == 0 ? new ThreadPoolExecutor(
+                    DefaultConfig.DeliveryConfig.THREAD_POOL_CORE_POLL_SIZE,
+                    DefaultConfig.DeliveryConfig.THREAD_POOL_MAX_POLL_SIZE,
+                    DefaultConfig.DeliveryConfig.THREAD_POOL_KEEP_ALIVE_TIME,
+                    TimeUnit.MILLISECONDS,
+                    new SynchronousQueue<>()
+            ) : new ThreadPoolExecutor(
+                    DefaultConfig.DeliveryConfig.THREAD_POOL_CORE_POLL_SIZE,
+                    DefaultConfig.DeliveryConfig.THREAD_POOL_MAX_POLL_SIZE,
+                    DefaultConfig.DeliveryConfig.THREAD_POOL_KEEP_ALIVE_TIME,
+                    TimeUnit.MILLISECONDS,
+                    new ArrayBlockingQueue<>(DefaultConfig.DeliveryConfig.THREAD_POOL_QUEUE_SIZE)
+            );
     }
 
 }

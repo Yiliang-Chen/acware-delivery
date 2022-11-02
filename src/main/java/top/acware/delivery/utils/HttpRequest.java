@@ -13,7 +13,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import top.acware.delivery.common.config.GlobalConfig;
+import top.acware.delivery.common.config.DefaultConfig;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,8 +30,8 @@ public class HttpRequest {
     private static final int TIMEOUT;
 
     static {
-        CHARSET = GlobalConfig.getInstance().getString(GlobalConfig.HTTP_REQUEST_CHARSET);
-        TIMEOUT = GlobalConfig.getInstance().getInt(GlobalConfig.HTTP_REQUEST_TIMEOUT);
+        CHARSET = DefaultConfig.DeliveryConfig.HTTP_REQUEST_CHARSET;
+        TIMEOUT = DefaultConfig.DeliveryConfig.HTTP_REQUEST_TIMEOUT;
         httpClient = HttpClientBuilder
                 .create()
                 .setDefaultRequestConfig(

@@ -69,8 +69,8 @@ public class example {
                 .callback(callback)
                 .builder()
                 .setDefaultChildHandler();
-        ThreadPool.getExecutor().execute(ws);
-        ThreadPool.getExecutor().execute(receive);
+        ThreadPool.executor(ws);
+        ThreadPool.executor(receive);
         try {
             System.in.read();
         } catch (IOException e) {
@@ -92,7 +92,7 @@ public class example {
         consumer.subscribe(Collections.singletonList("kafka"));
         Callback<KafkaRecord<String, String>> callback = new DefaultCallback<>();
         KafkaConsumerWorker<String, String> worker = new KafkaConsumerWorker<>(consumer, callback);
-        ThreadPool.getExecutor().execute(worker);
+        ThreadPool.executor(worker);
 
         /* Email Warning */
         EmailWarning emailWarning = new EmailWarning();
@@ -122,7 +122,7 @@ public class example {
                 .build()
                 .setDefaultHandler()
                 .setDefaultChildHandler();
-        ThreadPool.getExecutor().execute(ws);
+        ThreadPool.executor(ws);
 
         try {
             System.in.read();
@@ -167,7 +167,7 @@ public class example {
                 .build()
                 .setDefaultHandler()
                 .setDefaultChildHandler();
-        ThreadPool.getExecutor().execute(ws);
+        ThreadPool.executor(ws);
 
         HttpReceiveWorker receive = new HttpReceiveWorker.Builder()
                 .uri("/data")
@@ -177,7 +177,7 @@ public class example {
                 .builder()
                 .setDefaultHandler()
                 .setDefaultChildHandler();
-        ThreadPool.getExecutor().execute(receive);
+        ThreadPool.executor(receive);
 
         try {
             System.in.read();

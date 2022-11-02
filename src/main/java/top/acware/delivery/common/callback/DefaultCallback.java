@@ -1,7 +1,7 @@
 package top.acware.delivery.common.callback;
 
 import lombok.extern.slf4j.Slf4j;
-import top.acware.delivery.common.config.GlobalConfig;
+import top.acware.delivery.common.config.DefaultConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class DefaultCallback<T> implements Callback<T> {
         mark = new AtomicInteger(0);
         readLock = new ReentrantLock();
         list = new ArrayList<>();
-        limit = GlobalConfig.getInstance().getInt(GlobalConfig.CALLBACK_LIMIT);
+        limit = DefaultConfig.DeliveryConfig.CALLBACK_LIMIT;
     }
 
     /**

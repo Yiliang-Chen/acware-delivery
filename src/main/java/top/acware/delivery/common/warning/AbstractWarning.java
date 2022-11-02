@@ -13,7 +13,7 @@ public abstract class AbstractWarning extends Thread{
      * 使用线程池执行
      */
     public void execute() {
-        ThreadPool.getExecutor().execute(this);
+        ThreadPool.executor(this);
     }
 
     @Override
