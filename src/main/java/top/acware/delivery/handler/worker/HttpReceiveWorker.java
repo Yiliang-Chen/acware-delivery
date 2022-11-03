@@ -64,7 +64,8 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
     public HttpReceiveWorker setHandler(ChannelHandler handler) {
         if (this.setHandler) {
             this.bootstrap.handler(handler);
-            setHandler = false;
+            this.setHandler = false;
+            this.start = true;
         } else {
             log.warn(" You can't invoke this method, because handler has been added ");
         }
@@ -76,6 +77,7 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
         if (this.setChildHandler) {
             this.bootstrap.childHandler(childHandler);
             this.setChildHandler = false;
+            this.start = true;
         } else {
             log.warn(" You can't invoke this method, because handler has been added ");
         }
@@ -139,8 +141,8 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
                     pipeline.addLast(handlers);
                 }
             });
-            setChildHandler = false;
-            start = true;
+            this.setChildHandler = false;
+            this.start = true;
         } else {
             log.warn(" You can't invoke this method, because handler has been added or other error ");
         }
@@ -177,7 +179,7 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
         private HttpMethod method;
         private String uri;
         private Callback<StringRecord> callback;
-        private boolean define;
+        private boolean define = true;
 
         public Builder bossThreads(Integer nThreads) {
             this.bossThreads = nThreads;
@@ -210,11 +212,8 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
         }
 
         public HttpReceiveWorker builder() {
-            if (this.inetPort == null || this.method == null || this.uri == null || this.callback == null) {
+            if (this.inetPort == null || this.method == null || this.uri == null || this.callback == null)
                 define = false;
-                throw new BuilderException(" Has no initialized data, cannot use the default method  ");
-            } else
-                define = true;
             return new HttpReceiveWorker(this);
         }
     }

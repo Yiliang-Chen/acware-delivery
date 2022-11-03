@@ -2,6 +2,7 @@ package top.acware.delivery.common;
 
 import lombok.ToString;
 import org.junit.Test;
+import redis.clients.jedis.Jedis;
 import top.acware.delivery.common.config.ConfigDef;
 import top.acware.delivery.common.config.DefaultConfig;
 import top.acware.delivery.common.warning.EmailWarning;
@@ -53,6 +54,15 @@ public class Common {
         httpWarning.setToJson(true);
         httpWarning.setUrl("http://www.acware.top:9910/api/data/scroll");
         httpWarning.sendMessage();
+    }
+
+    @Test
+    public void redis() {
+        Jedis jedis = new Jedis("localhost", 6379);
+        jedis.hset("Test", "1", "cba");
+        jedis.hset("Test", "2", "cba");
+        System.out.println(jedis.hget("Test", "1"));
+        System.out.println(jedis.hget("Test", "2"));
     }
 
 }

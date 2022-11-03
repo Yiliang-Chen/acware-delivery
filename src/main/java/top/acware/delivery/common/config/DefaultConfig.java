@@ -7,7 +7,7 @@ public class DefaultConfig extends AbstractConfig{
 
     private static final ConfigDef CONFIG;
 
-    private static final DefaultConfig instance;
+    private static final DefaultConfig INSTANCE;
 
     /** Callback 配置 */
     public static final String CALLBACK_LIMIT_Prop = "callback.limit";
@@ -53,15 +53,15 @@ public class DefaultConfig extends AbstractConfig{
                 .define(THREAD_POOL_QUEUE_SIZE_Prop, ConfigDef.Type.INT, -1)
                 .define(HTTP_REQUEST_CHARSET_Prop, ConfigDef.Type.STRING, "UTF-8")
                 .define(HTTP_REQUEST_TIMEOUT_Prop, ConfigDef.Type.INT, 60000);
-        instance = new DefaultConfig();
+        INSTANCE = new DefaultConfig();
     }
 
-    public DefaultConfig() {
+    private DefaultConfig() {
         super(CONFIG);
     }
 
     public static DefaultConfig getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     public static ConfigDef getConfig() {

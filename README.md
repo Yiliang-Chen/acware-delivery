@@ -1,7 +1,7 @@
 # AcWare Delivery 实时数据推送框架
 - 框架说明
-  - 基于 Netty 开发的 Websocket 实时数据推送框架，将数据直接通过 Websocket 推送至前端
-  - 目前功能实现 
+  - 基于 Netty 开发的 Websocket 实时数据推送框架，将数据直接通过 Websocket 推送至前端，目前可通过 Kafka、Http 接收数据
+  - 功能实现 
     - Websocket 接口配置化实现
     - Kafka 数据实时推送
     - Http 数据实时推送
@@ -11,6 +11,7 @@
 
 # 版本更新记录
 - 0.2.0
+  - Config、Thread 代码优化，使用线程安全的 CopyOnWriteMap 类存储 channels
 - 0.1.0
   - 首次发布版本
   - 新增 Kafka 数据实时推送
@@ -26,7 +27,7 @@
     - 预留告警事件消息反馈方法（Email、Http）
 
 - 0.2.0 版本计划
-  - [] Socket 数据实时推送
+  - [] Redis Callback
   - [] 代码优化
 
 - 0.1.0 版本计划
