@@ -7,6 +7,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.Test;
 import top.acware.delivery.common.callback.Callback;
 import top.acware.delivery.common.callback.DefaultCallback;
+import top.acware.delivery.common.callback.RedisCallback;
 import top.acware.delivery.common.record.KafkaRecord;
 import top.acware.delivery.common.record.Record;
 import top.acware.delivery.common.record.StringRecord;
@@ -151,7 +152,8 @@ public class example {
             }
         }
 
-        Callback<StringRecord> callback = new DefaultCallback<>();
+//        Callback<StringRecord> callback = new DefaultCallback<>();
+        Callback<StringRecord> callback = new RedisCallback("define");
         HttpWarning httpWarning = new HttpWarning();
         httpWarning.setUrl("https://www.baidu.com");
         WebsocketServerWorker ws = new WebsocketServerWorker.Builder()
@@ -161,7 +163,7 @@ public class example {
                 .defaultHandler(new DefaultChannelHandler(new send(callback), new WarnRule() {
                     @Override
                     public void rule(Record record) {
-                        httpWarning.sendMessage();
+//                        httpWarning.sendMessage();
                     }
                 }))
                 .build()

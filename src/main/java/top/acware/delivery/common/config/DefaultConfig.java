@@ -36,6 +36,10 @@ public class DefaultConfig extends AbstractConfig{
     public static final String HTTP_REQUEST_CHARSET_Prop = "http.request.charset";
     public static final String HTTP_REQUEST_TIMEOUT_Prop = "http.request.timeout";
 
+    /** Redis 配置 */
+    public static final String REDIS_HOST_Prop = "redis.host";
+    public static final String REDIS_PORT_Prop = "redis.port";
+
     static {
         CONFIG = new ConfigDef()
                 .define(CALLBACK_LIMIT_Prop, ConfigDef.Type.INT, 5)
@@ -52,7 +56,9 @@ public class DefaultConfig extends AbstractConfig{
                 .define(THREAD_POOL_KEEP_ALIVE_TIME_Prop, ConfigDef.Type.LONG, 200)
                 .define(THREAD_POOL_QUEUE_SIZE_Prop, ConfigDef.Type.INT, -1)
                 .define(HTTP_REQUEST_CHARSET_Prop, ConfigDef.Type.STRING, "UTF-8")
-                .define(HTTP_REQUEST_TIMEOUT_Prop, ConfigDef.Type.INT, 60000);
+                .define(HTTP_REQUEST_TIMEOUT_Prop, ConfigDef.Type.INT, 60000)
+                .define(REDIS_HOST_Prop, ConfigDef.Type.STRING, "localhost")
+                .define(REDIS_PORT_Prop, ConfigDef.Type.INT, 6379);
         INSTANCE = new DefaultConfig();
     }
 
@@ -95,6 +101,10 @@ public class DefaultConfig extends AbstractConfig{
         /** Http 请求配置 */
         public static final String HTTP_REQUEST_CHARSET = getInstance().getString(DefaultConfig.HTTP_REQUEST_CHARSET_Prop);
         public static final Integer HTTP_REQUEST_TIMEOUT = getInstance().getInt(DefaultConfig.HTTP_REQUEST_TIMEOUT_Prop);
+
+        /** Redis 配置 */
+        public static final String REDIS_HOST = getInstance().getString(DefaultConfig.REDIS_HOST_Prop);
+        public static final Integer REDIS_PORT = getInstance().getInt(DefaultConfig.REDIS_PORT_Prop);
     }
 
 }
