@@ -31,6 +31,11 @@
             /* display: none; */
         }
 
+        .element-data .show-dataNum {
+            margin: 35px 0 0 10px;
+            position: absolute;
+        }
+
         .element-data .data-show {
             max-width: 100vw;
             position: absolute;
@@ -41,8 +46,9 @@
 
         .element-data .data-show .data-number {
             display: inline-block;
-            font-size: 215px;
-            line-height: 215px;
+            /* font-size: 215px;
+            line-height: 215px; */
+            font-size: 15vw;
             margin: 0;
             padding: 0;
         }
@@ -68,8 +74,11 @@
         <div class="show-websock">
             <p id="contain"></p>
         </div>
+        <div class="show-dataNum">
+            <p id="dataNum"></p>
+        </div>
         <div class="data-show">
-            <p class="data-number"><span>￥</span><span id="realTimeData">Delivery</span></p>
+            <p class="data-number"><span>￥</span><span id="realTimeData">123456</span></p>
         </div>
         <div class="data-message">
             <p class="data-msgshow">用户下单了一条</p>
@@ -87,9 +96,11 @@
 <script>
     var socket;
     var $realTimeData = 0; //初始化数值
+    var dataNum = 0;
     if (window.WebSocket) {
         socket = new WebSocket('ws://192.168.31.117:9999/ws');
         socket.onmessage = function (e) {
+            console.log(e.data);
             getScrollMsg(e.data);
             getRealTimeData(javaObjectToJson(e.data).value);
             console.log(javaObjectToJson(e.data))
@@ -120,8 +131,8 @@
         var newHtml = temp.join('');
         document.getElementById('realTimeData').innerText = newHtml; //拼接为字符串渲染页面
         var dataWidthEle = document.getElementsByClassName('data-show')[0];
-        var dataWidth = getComputedStyle(dataWidthEle, null)['width'];
-
+        var dataWidth = getComputedStyle(dataWidthEle, null)['width'].split('px')[0];
+        console.log(dataWidth);
         var offsetWidth = document.body.offsetWidth;
         if (dataWidth > offsetWidth - 100) {
             var dataNumber = document.getElementsByClassName('data-number')[0];
@@ -129,26 +140,45 @@
             var lineHeight = getComputedStyle(dataNumber, null)['lineHeight'].split('px')[0] - 50;
             dataNumber.style.fontSize = fontSize + 'px';
             dataNumber.style.lineHeight = lineHeight + 'px';
+            // dataNumber.style.fontSize = 15 + 'vw'
         }
     }
 
     // 获取最新信息
     function getScrollMsg(str) {
+        dataNum++;
+        var dataNumMsg = document.getElementById('dataNum');
+        dataNumMsg.innerHTML = dataNum;
         var addmsg = '<p class="data-msgshow">' + str + '</p>' //获取最新消息
-        document.getElementsByClassName('data-message')[0].insertAdjacentHTML('beforeend',addmsg); //添加至信息末尾
+        document.getElementsByClassName('data-message')[0].insertAdjacentHTML('beforeend', addmsg); //添加至信息末尾
         var length = document.getElementsByClassName('data-msgshow').length;
-        while (length > 3) { //仅展示3条数据
+        // while (length > 3) { //仅展示3条数据
+        //     var firstmsg = document.getElementsByClassName('data-msgshow')[0];
+        //     var firstmsgHeight = getComputedStyle(firstmsg, null)['height'].split('px')[0];//获取高度
+        //     timer = setInterval(function(){
+        //         firstmsg.style.height = firstmsgHeight - 10 + 'px';
+        //         firstmsgHeight -= 10;
+        //         if(firstmsgHeight <= 0){
+        //             var top = document.getElementsByClassName('data-msgshow')[0];
+        //             if(top){
+        //                 document.getElementsByClassName('data-msgshow')[0].remove(); //移除最顶处数据
+        //                 // clearInterval(timer);
+        //                 length--;
+        //             }
+        //             clearInterval(timer);
+        //         }
+        //     },100)
+        // }
+        for (var i = length; i > 3; i--) {
             var firstmsg = document.getElementsByClassName('data-msgshow')[0];
-            var firstmsgHeight = getComputedStyle(firstmsg, null)['height'].split('px')[0];//获取高度
-            var timer = setInterval(function(){
+            var firstmsgHeight = getComputedStyle(firstmsg, null)['height'].split('px')[0]; //获取高度
+            for (var j = firstmsgHeight; j > 0; j -= 10) {
                 firstmsg.style.height = firstmsgHeight - 10 + 'px';
                 firstmsgHeight -= 10;
-                if(firstmsgHeight <= 0){
+                if (firstmsgHeight <= 0) {
                     document.getElementsByClassName('data-msgshow')[0].remove(); //移除最顶处数据
-                    clearInterval(timer)
                 }
-            },100)
-            length--;
+            }
         }
 
     }

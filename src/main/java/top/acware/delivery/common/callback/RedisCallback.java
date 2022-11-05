@@ -57,11 +57,13 @@ public class RedisCallback implements Callback<StringRecord>{
     @Override
     public StringRecord read() {
         try (Jedis redis = jedis.getResource()) {
-            log.debug(" Read data, position = {}, recordId = {}", position, recordId.get());
-            return new StringRecord(redis.hget(VERSION, String.valueOf(position)));
+            while (true) {
+                if (redis.hexists(VERSION, String.valueOf(position)))
+                    break;
+            }
+            return new StringRecord(redis.hget(VERSION, String.valueOf(position++)));
         } finally {
-            position++;
-            log.debug(" Read end data, position = {}, recordId = {}", position, recordId.get());
+            log.debug(" Read end data, position++ = {}, recordId = {}", position, recordId.get());
             readLock.unlock();
         }
     }
@@ -70,7 +72,6 @@ public class RedisCallback implements Callback<StringRecord>{
     public void write(StringRecord data) {
         while (limit > 0 && (recordId.get() - lastStatus) >= limit) {
             updateStatus();
-            log.debug(" List over the limit, update status ");
         }
         try (Jedis redis = jedis.getResource()) {
             redis.hset(VERSION, String.valueOf(recordId.getAndIncrement()), data.getValue());
@@ -92,7 +93,6 @@ public class RedisCallback implements Callback<StringRecord>{
                     redis.hdel(VERSION, String.valueOf(i));
             }
         } finally {
-            log.debug(" Update status end, position = {}, lastStatus = {} ", position, lastStatus);
             lastStatus = position;
             readLock.unlock();
         }

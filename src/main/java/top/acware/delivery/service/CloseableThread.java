@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class CloseableThread extends Thread {
 
-    private boolean running = true;
+    private boolean running;
 
     private final String logIdent;
 
@@ -42,6 +42,7 @@ public abstract class CloseableThread extends Thread {
     @Override
     public void run() {
         log.info(" {} Starting ", logIdent);
+        running = true;
         try {
             while (running)
                 doWork();

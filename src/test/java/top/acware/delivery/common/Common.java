@@ -63,6 +63,8 @@ public class Common {
         jedis.hset("Test", "2", "cba");
         System.out.println(jedis.hget("Test", "1"));
         System.out.println(jedis.hget("Test", "2"));
+        System.out.println(jedis.hexists("define", "0"));
+        System.out.println(jedis.hexists("define", "3"));
     }
 
 }

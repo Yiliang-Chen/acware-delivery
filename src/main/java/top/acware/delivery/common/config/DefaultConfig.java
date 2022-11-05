@@ -90,7 +90,7 @@ public class DefaultConfig extends AbstractConfig{
         public static final String EMAIL_SMTP_AUTHENTICATION_USERNAME = getInstance().getString(DefaultConfig.EMAIL_SMTP_AUTHENTICATION_USERNAME_Prop);
         public static final String EMAIL_SMTP_AUTHENTICATION_PASSWORD = getInstance().getString(DefaultConfig.EMAIL_SMTP_AUTHENTICATION_PASSWORD_Prop);
         public static final String EMAIL_SMTP_FROM_EMAIL = getInstance().getString(DefaultConfig.EMAIL_SMTP_FROM_EMAIL_Prop);
-        public static final String EMAIL_SMTP_FROM_NAME = getInstance().getString(DefaultConfig.EMAIL_SMTP_FROM_EMAIL_Prop);
+        public static final String EMAIL_SMTP_FROM_NAME = getInstance().getString(DefaultConfig.EMAIL_SMTP_FROM_NAME_Prop);
 
         /** 线程池配置 */
         public static final Integer THREAD_POOL_CORE_POLL_SIZE = getInstance().getInt(DefaultConfig.THREAD_POOL_CORE_POLL_SIZE_Prop);

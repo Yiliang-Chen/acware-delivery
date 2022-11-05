@@ -6,12 +6,14 @@
     - Kafka 数据实时推送
     - Http 数据实时推送
     - 预留告警事件消息反馈方法（Email、Http）
+    - Redis 缓存数据
 - 使用场景
   - 双十一数据大屏展示、实时数据推送等实时数据使用场景
 
 # 版本更新记录
 - 0.2.0
   - Config、Thread 代码优化，使用线程安全的 CopyOnWriteMap 类存储 channels
+  - Redis Callback
 - 0.1.0
   - 首次发布版本
   - 新增 Kafka 数据实时推送
@@ -21,14 +23,15 @@
 # 版本功能
 - 当前版本已实现
   - 0.2.0
+    - Redis Callback
   - 0.1.0
     - Kafka 数据实时推送
     - Http 数据实时推送
     - 预留告警事件消息反馈方法（Email、Http）
 
 - 0.2.0 版本计划
-  - [] Redis Callback
-  - [] 代码优化
+  - [√] Redis Callback
+  - [√] 代码优化
 
 - 0.1.0 版本计划
   - [√] Kafka 数据实时推送
@@ -36,7 +39,6 @@
   - [√] 预留告警事件消息反馈方法（Email、Http）
 
 - 未来版本功能蓝图
-  - Socket 数据实时推送
   - 其他消息队列数据实时推送（ActiveMQ、RabbitMQ、RocketMQ 等）
   - 数据库更新实时推送
 
@@ -80,6 +82,10 @@ thread.pool.queue-size=-1
 http.request.charset=UTF-8
 # Http 请求超时时间
 http.request.timeout=60000
+
+# Redis 配置
+redis.host=localhost
+redis.port=6379
 ```
 ## 日志打印
 ```properties

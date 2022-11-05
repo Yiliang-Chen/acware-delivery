@@ -99,11 +99,11 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
                             String record = msg.content().toString(StandardCharsets.UTF_8)
                                     .replace("\n", "")
                                     .replace("\t", "")
+                                    .replace("\r", "")
                                     .replace(" ", "");
-                            log.debug("Headers: {}, Method: {}, URI: {}, data: {}",
-                                    msg.headers(), msg.method(), msg.uri(), record);
                             if (method == msg.method() && uri.equals(msg.uri())) {
                                 // 将接收到到数据写入回调函数
+                                log.debug("Record: {}", record);
                                 callback.write(new StringRecord(record));
                                 ctx.writeAndFlush(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK));
                                 ctx.close();

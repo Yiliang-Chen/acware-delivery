@@ -31,30 +31,8 @@ public class example {
     @Test
     public void http() {
         Callback<StringRecord> callback = new DefaultCallback<>();
-
-        HttpWarning httpWarning = new HttpWarning();
-        httpWarning.setUrl("https://www.baidu.com");
-        Map<String, String> header = new HashMap<>();
-        header.put("Content-Type", "application/json");
-        httpWarning.setHeaders(header);
-        httpWarning.setMethod(HttpRequest.RequestMethod.GET);
-        httpWarning.setToJson(false);
-
         WebsocketServerWorker ws = new WebsocketServerWorker.Builder()
-                .defaultHandler(new DefaultChannelHandler(new HttpSendMessageWorker(callback), new WarnRule() {
-                    @Override
-                    public void rule(Record record) {
-                        try {
-                            if (Long.parseLong((String) record.getValue()) < 0) {
-                                String data = "search=abc";
-                                httpWarning.setData(data);
-                                httpWarning.execute();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }))
+                .defaultHandler(new DefaultChannelHandler(new HttpSendMessageWorker(callback)))
                 .bossThreads(1)
                 .websocketPath("/ws")
                 .inetPort(9999)
@@ -152,6 +130,8 @@ public class example {
             }
         }
 
+        final long[] count = {0};
+
 //        Callback<StringRecord> callback = new DefaultCallback<>();
         Callback<StringRecord> callback = new RedisCallback("define");
         HttpWarning httpWarning = new HttpWarning();
@@ -163,7 +143,11 @@ public class example {
                 .defaultHandler(new DefaultChannelHandler(new send(callback), new WarnRule() {
                     @Override
                     public void rule(Record record) {
-//                        httpWarning.sendMessage();
+                        System.out.println("warn.rule: " + record);
+                        count[0]++;
+                        if (count[0] % 5 == 0) {
+                            httpWarning.sendMessage();
+                        }
                     }
                 }))
                 .build()
