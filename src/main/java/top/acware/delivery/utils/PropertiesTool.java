@@ -1,5 +1,7 @@
 package top.acware.delivery.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +12,7 @@ import java.util.Properties;
 /**
  * 获取配置文件
  */
+@Slf4j
 public class PropertiesTool {
 
     public Properties getProperties(String fileName) {
@@ -19,7 +22,8 @@ public class PropertiesTool {
             if (in != null)
                 properties.load(new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.warn(" {} is not found ", fileName);
+            return null;
         }
         return properties;
     }

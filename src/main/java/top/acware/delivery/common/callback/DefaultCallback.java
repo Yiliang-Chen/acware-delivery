@@ -1,7 +1,7 @@
 package top.acware.delivery.common.callback;
 
 import lombok.extern.slf4j.Slf4j;
-import top.acware.delivery.common.config.GlobalConfig;
+import top.acware.delivery.common.config.DefaultConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,24 +27,29 @@ public class DefaultCallback<T> implements Callback<T> {
         mark = new AtomicInteger(0);
         readLock = new ReentrantLock();
         list = new ArrayList<>();
-        limit = GlobalConfig.getInstance().getInt(GlobalConfig.CALLBACK_LIMIT);
+    }
+
+    public DefaultCallback() {
+        this.limit = DefaultConfig.DeliveryConfig.CALLBACK_LIMIT;
+    }
+
+    public DefaultCallback(Integer limit) {
+        this.limit = limit;
     }
 
     /**
-     * 判断是否刻度
+     * 判断是否可读
      */
     @Override
     public boolean canRead() {
-        if (position < mark.get())
-            return true;
-        return false;
+        return position < mark.get() && readLock.tryLock();
     }
 
     /**
      * 修改状态，修改期间不允许读
      */
     @Override
-    public boolean updateStatus() {
+    public void updateStatus() {
         readLock.lock();
         log.debug(" Update status start, position = {}, mark = {} ", position, mark.get());
         try {
@@ -57,11 +62,6 @@ public class DefaultCallback<T> implements Callback<T> {
             log.debug(" Update status end, position = {}, mark = {} ", position, mark.get());
             readLock.unlock();
         }
-        if (!(list.size() < limit)) {
-            log.info(" The current state cannot be update, position = {}, mark = {} ", position, mark.get());
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -69,7 +69,6 @@ public class DefaultCallback<T> implements Callback<T> {
      */
     @Override
     public T read() {
-        readLock.lock();
         try {
             log.debug(" Read data, position = {}, mark = {}", position, mark.get());
             return list.get(position);
@@ -84,10 +83,9 @@ public class DefaultCallback<T> implements Callback<T> {
      */
     @Override
     public void write(T data) {
-        if (list.size() >= limit) {
-            while (!updateStatus()) {
-                log.info(" List over the limit, update status ");
-            }
+        while (list.size() >= limit) {
+            updateStatus();
+            log.debug(" List over the limit, update status ");
         }
         list.add(data);
         log.debug(" Add data -> {} ", data);

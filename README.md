@@ -1,15 +1,19 @@
 # AcWare Delivery 实时数据推送框架
 - 框架说明
-  - 基于 Netty 开发的 Websocket 实时数据推送框架，将数据直接通过 Websocket 推送至前端
-  - 目前功能实现 
+  - 基于 Netty 开发的 Websocket 实时数据推送框架，将数据直接通过 Websocket 推送至前端，目前可通过 Kafka、Http 接收数据
+  - 功能实现 
     - Websocket 接口配置化实现
     - Kafka 数据实时推送
     - Http 数据实时推送
     - 预留告警事件消息反馈方法（Email、Http）
+    - Redis 缓存数据
 - 使用场景
   - 双十一数据大屏展示、实时数据推送等实时数据使用场景
 
 # 版本更新记录
+- 0.2.0
+  - Config、Thread 代码优化，使用线程安全的 CopyOnWriteMap 类存储 channels
+  - Redis Callback
 - 0.1.0
   - 首次发布版本
   - 新增 Kafka 数据实时推送
@@ -18,10 +22,16 @@
 
 # 版本功能
 - 当前版本已实现
+  - 0.2.0
+    - Redis Callback
   - 0.1.0
     - Kafka 数据实时推送
     - Http 数据实时推送
     - 预留告警事件消息反馈方法（Email、Http）
+
+- 0.2.0 版本计划
+  - [√] Redis Callback
+  - [√] 代码优化
 
 - 0.1.0 版本计划
   - [√] Kafka 数据实时推送
@@ -29,7 +39,6 @@
   - [√] 预留告警事件消息反馈方法（Email、Http）
 
 - 未来版本功能蓝图
-  - Socket 数据实时推送
   - 其他消息队列数据实时推送（ActiveMQ、RabbitMQ、RocketMQ 等）
   - 数据库更新实时推送
 
@@ -40,26 +49,43 @@ mvn clean package -Dmaven.test.skip=true
 # 配置文件参考
 ## delivery.properties
 ```properties
+# 回调函数刷新条数
 callback.limit=5
 
+# Kafka 拉取数据超时时间
 kafka.poll-timeout=1000
 
+# Netty 接收数据最大长度
 netty.max-content-length=8192
 
+# Email smtp 的地址
 email.smtp.hostname=smtp.sina.com
 email.smtp.charset=UTF-8
+# 发送邮件的账号
 email.smtp.authentication.username=AcWare@acware.top
+# 发送邮件的密码(有些是授权码)
 email.smtp.authentication.password=PASSWORD
+# 发送邮件的账号(需要和上面一致)
 email.smtp.from.email=AcWare@acware.top
+# 发送邮件的账号名称
 email.smtp.from.name=AcWare-Delivery
 
+# 线程池核心线程大小
 thread.pool.core-pool-size=6
+# 线程池最大线程数量
 thread.pool.max-pool-size=18
+# 线程池多余的空闲线程存活时间
 thread.pool.keep-alive-time=200
-thread.pool.blocking-queue=java.util.concurrent.LinkedBlockingQueue
+# 线程池任务队列大小
+thread.pool.queue-size=-1
 
 http.request.charset=UTF-8
+# Http 请求超时时间
 http.request.timeout=60000
+
+# Redis 配置
+redis.host=localhost
+redis.port=6379
 ```
 ## 日志打印
 ```properties

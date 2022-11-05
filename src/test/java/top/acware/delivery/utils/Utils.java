@@ -1,6 +1,7 @@
 package top.acware.delivery.utils;
 
 import org.junit.Test;
+import top.acware.delivery.common.config.ConfigDef;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +11,8 @@ public class Utils {
     @Test
     public void properties() {
         System.out.println(new PropertiesTool().getProperties("delivery.properties").getProperty("callback.limit"));
+        System.out.println(new PropertiesTool().getProperties("delivery.properties").getProperty("callback.limit").equals(ConfigDef.NO_DEFAULT_VALUE));
+        System.out.println("" == ConfigDef.NO_DEFAULT_VALUE);
     }
 
     @Test

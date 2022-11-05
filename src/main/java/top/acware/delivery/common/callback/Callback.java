@@ -15,6 +15,6 @@ public interface Callback<T> {
     boolean canRead();
 
     // 更新状态
-    boolean updateStatus();
+    void updateStatus();
 
 }

@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import top.acware.delivery.common.config.GlobalConfig;
+import top.acware.delivery.common.config.DefaultConfig;
 
 /**
  * 邮件告警
@@ -17,12 +17,12 @@ public class EmailWarning extends AbstractWarning {
     {
         try {
             email = new HtmlEmail();
-            email.setCharset(GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_CHARSET));
-            email.setHostName(GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_HOSTNAME));
-            email.setAuthentication(GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_AUTHENTICATION_USERNAME),
-                    GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_AUTHENTICATION_PASSWORD));
-            email.setFrom(GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_FROM_EMAIL),
-                    GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_FROM_NAME));
+            email.setCharset(DefaultConfig.DeliveryConfig.EMAIL_SMTP_CHARSET);
+            email.setHostName(DefaultConfig.DeliveryConfig.EMAIL_SMTP_HOSTNAME);
+            email.setAuthentication(DefaultConfig.DeliveryConfig.EMAIL_SMTP_AUTHENTICATION_USERNAME,
+                    DefaultConfig.DeliveryConfig.EMAIL_SMTP_AUTHENTICATION_PASSWORD);
+            email.setFrom(DefaultConfig.DeliveryConfig.EMAIL_SMTP_FROM_EMAIL,
+                    DefaultConfig.DeliveryConfig.EMAIL_SMTP_FROM_NAME);
         } catch (EmailException e) {
             throw new RuntimeException(e);
         }
@@ -71,12 +71,12 @@ public class EmailWarning extends AbstractWarning {
     public HtmlEmail emailClone(Email email) {
         HtmlEmail clone = new HtmlEmail();
         try {
-            clone.setCharset(GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_CHARSET));
-            clone.setHostName(GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_HOSTNAME));
-            clone.setAuthentication(GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_AUTHENTICATION_USERNAME),
-                    GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_AUTHENTICATION_PASSWORD));
-            clone.setFrom(GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_FROM_EMAIL),
-                    GlobalConfig.getInstance().getString(GlobalConfig.EMAIL_SMTP_FROM_NAME));
+            clone.setCharset(DefaultConfig.DeliveryConfig.EMAIL_SMTP_CHARSET);
+            clone.setHostName(DefaultConfig.DeliveryConfig.EMAIL_SMTP_HOSTNAME);
+            clone.setAuthentication(DefaultConfig.DeliveryConfig.EMAIL_SMTP_AUTHENTICATION_USERNAME,
+                    DefaultConfig.DeliveryConfig.EMAIL_SMTP_AUTHENTICATION_PASSWORD);
+            clone.setFrom(DefaultConfig.DeliveryConfig.EMAIL_SMTP_FROM_EMAIL,
+                    DefaultConfig.DeliveryConfig.EMAIL_SMTP_FROM_NAME);
             clone.setSubject(email.getSubject());
             clone.setTo(email.getToAddresses());
             clone.setCc(email.getCcAddresses());

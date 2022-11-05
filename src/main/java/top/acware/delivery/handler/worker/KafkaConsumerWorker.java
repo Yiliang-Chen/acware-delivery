@@ -4,7 +4,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import top.acware.delivery.common.callback.Callback;
-import top.acware.delivery.common.config.GlobalConfig;
+import top.acware.delivery.common.config.DefaultConfig;
 import top.acware.delivery.common.record.KafkaRecord;
 import top.acware.delivery.service.CloseableThread;
 
@@ -26,13 +26,15 @@ public class KafkaConsumerWorker<K, V> extends CloseableThread {
         super(threadName);
         this.consumer = consumer;
         this.callback = callback;
-        this.poll_timeout = GlobalConfig.getInstance().getLong(GlobalConfig.KAFKA_POLL_TIMEOUT);
+        this.poll_timeout = DefaultConfig.DeliveryConfig.KAFKA_POLL_TIMEOUT;
     }
 
     @Override
     public void doWork() throws Exception {
+        // 拉取数据
         ConsumerRecords<K, V> records = consumer.poll(poll_timeout);
         for (ConsumerRecord<K, V> record : records) {
+            // 写入 callback
             callback.write(new KafkaRecord<K, V>(
                     record.topic(),
                     record.partition(),

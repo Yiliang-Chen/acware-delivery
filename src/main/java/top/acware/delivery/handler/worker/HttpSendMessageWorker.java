@@ -3,6 +3,7 @@ package top.acware.delivery.handler.worker;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 import top.acware.delivery.common.callback.Callback;
+import top.acware.delivery.common.record.StringRecord;
 import top.acware.delivery.service.SendMessageThread;
 
 /**
@@ -22,11 +23,13 @@ public class HttpSendMessageWorker extends SendMessageThread {
     @Override
     public void work() {
         if (callback.canRead()) {
-            String record = (String) callback.read();
-            System.out.println(record);
+            StringRecord record = (StringRecord) callback.read();
+            if (warn != null) {
+                warn.rule(record);
+            }
             log.debug(" Send message has {} channel ", channels.size());
             for (String key : channels.keySet()) {
-                channels.get(key).writeAndFlush(new TextWebSocketFrame(record));
+                channels.get(key).writeAndFlush(new TextWebSocketFrame(record.toString()));
             }
         }
     }

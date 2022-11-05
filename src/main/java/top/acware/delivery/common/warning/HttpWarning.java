@@ -15,6 +15,7 @@ public class HttpWarning extends AbstractWarning{
     public HttpRequest.RequestMethod method;
     public boolean toJson = false;
 
+    // 设置 headers
     public void setHeaders(Map<String, String> headers) {
         this.headers = headers;
     }
@@ -30,18 +31,22 @@ public class HttpWarning extends AbstractWarning{
         HttpRequest.request(url, headers, data, method, toJson);
     }
 
+    // 设置 URL
     public void setUrl(String url) {
         this.url = url;
     }
 
+    // 设置请求方法
     public void setMethod(HttpRequest.RequestMethod method) {
         this.method = method;
     }
 
+    // 请求数据是否转成 JSON 格式
     public void setToJson(boolean toJson) {
         this.toJson = toJson;
     }
 
+    // 设置请求数据
     public void setData(Object data) {
         this.data = data;
     }

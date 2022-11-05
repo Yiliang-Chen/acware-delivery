@@ -7,6 +7,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.Test;
 import top.acware.delivery.common.callback.Callback;
 import top.acware.delivery.common.callback.DefaultCallback;
+import top.acware.delivery.common.callback.RedisCallback;
 import top.acware.delivery.common.record.KafkaRecord;
 import top.acware.delivery.common.record.Record;
 import top.acware.delivery.common.record.StringRecord;
@@ -30,30 +31,8 @@ public class example {
     @Test
     public void http() {
         Callback<StringRecord> callback = new DefaultCallback<>();
-
-        HttpWarning httpWarning = new HttpWarning();
-        httpWarning.setUrl("https://www.baidu.com");
-        Map<String, String> header = new HashMap<>();
-        header.put("Content-Type", "application/json");
-        httpWarning.setHeaders(header);
-        httpWarning.setMethod(HttpRequest.RequestMethod.GET);
-        httpWarning.setToJson(false);
-
         WebsocketServerWorker ws = new WebsocketServerWorker.Builder()
-                .defaultHandler(new DefaultChannelHandler(new HttpSendMessageWorker(callback), new WarnRule() {
-                    @Override
-                    public void rule(Record record) {
-                        try {
-                            if (Long.parseLong((String) record.getValue()) < 0) {
-                                String data = "search=abc";
-                                httpWarning.setData(data);
-                                httpWarning.execute();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }))
+                .defaultHandler(new DefaultChannelHandler(new HttpSendMessageWorker(callback)))
                 .bossThreads(1)
                 .websocketPath("/ws")
                 .inetPort(9999)
@@ -69,8 +48,8 @@ public class example {
                 .callback(callback)
                 .builder()
                 .setDefaultChildHandler();
-        ThreadPool.getExecutor().execute(ws);
-        ThreadPool.getExecutor().execute(receive);
+        ThreadPool.executor(ws);
+        ThreadPool.executor(receive);
         try {
             System.in.read();
         } catch (IOException e) {
@@ -92,7 +71,7 @@ public class example {
         consumer.subscribe(Collections.singletonList("kafka"));
         Callback<KafkaRecord<String, String>> callback = new DefaultCallback<>();
         KafkaConsumerWorker<String, String> worker = new KafkaConsumerWorker<>(consumer, callback);
-        ThreadPool.getExecutor().execute(worker);
+        ThreadPool.executor(worker);
 
         /* Email Warning */
         EmailWarning emailWarning = new EmailWarning();
@@ -122,7 +101,7 @@ public class example {
                 .build()
                 .setDefaultHandler()
                 .setDefaultChildHandler();
-        ThreadPool.getExecutor().execute(ws);
+        ThreadPool.executor(ws);
 
         try {
             System.in.read();
@@ -151,7 +130,10 @@ public class example {
             }
         }
 
-        Callback<StringRecord> callback = new DefaultCallback<>();
+        final long[] count = {0};
+
+//        Callback<StringRecord> callback = new DefaultCallback<>();
+        Callback<StringRecord> callback = new RedisCallback("define");
         HttpWarning httpWarning = new HttpWarning();
         httpWarning.setUrl("https://www.baidu.com");
         WebsocketServerWorker ws = new WebsocketServerWorker.Builder()
@@ -161,13 +143,17 @@ public class example {
                 .defaultHandler(new DefaultChannelHandler(new send(callback), new WarnRule() {
                     @Override
                     public void rule(Record record) {
-                        httpWarning.sendMessage();
+                        System.out.println("warn.rule: " + record);
+                        count[0]++;
+                        if (count[0] % 5 == 0) {
+                            httpWarning.sendMessage();
+                        }
                     }
                 }))
                 .build()
                 .setDefaultHandler()
                 .setDefaultChildHandler();
-        ThreadPool.getExecutor().execute(ws);
+        ThreadPool.executor(ws);
 
         HttpReceiveWorker receive = new HttpReceiveWorker.Builder()
                 .uri("/data")
@@ -177,7 +163,7 @@ public class example {
                 .builder()
                 .setDefaultHandler()
                 .setDefaultChildHandler();
-        ThreadPool.getExecutor().execute(receive);
+        ThreadPool.executor(receive);
 
         try {
             System.in.read();

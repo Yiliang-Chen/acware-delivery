@@ -11,15 +11,15 @@ import java.util.List;
 @Slf4j
 public class AbstractConfig {
 
-    private ConfigDef config;
+    private final ConfigDef config;
 
     public AbstractConfig(ConfigDef configDef) {
         this.config = configDef;
     }
 
-    private Object get(String key) {
+    public Object get(String key) {
         if (!config.configKeys.containsKey(key)) {
-            throw new ConfigException(String.format("Unknown configuration '%s'", key));
+            throw new ConfigException(String.format(" Unknown configuration '%s' ", key));
         }
         return config.configKeys.get(key);
     }

@@ -15,7 +15,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import lombok.extern.slf4j.Slf4j;
-import top.acware.delivery.common.config.GlobalConfig;
+import top.acware.delivery.common.config.DefaultConfig;
 import top.acware.delivery.common.exception.NetworkException;
 import top.acware.delivery.handler.channel.DefaultChannelHandler;
 import top.acware.delivery.service.NettyNetwork;
@@ -30,14 +30,17 @@ public class WebsocketServerWorker extends WorkerThread implements NettyNetwork 
     private final NioEventLoopGroup boss;
     private final NioEventLoopGroup worker;
     private final ServerBootstrap server;
+    /* Websocket 服务地址 */
     private final String websocketPath;
+    /* 绑定端口 */
     private final Integer inetPort;
     private final Integer maxContentLength;
     private boolean setChildHandler = true;
+    /* 配置默认 handler */
     private final DefaultChannelHandler defaultHandler;
     private boolean setHandler = true;
     private boolean start = false;
-    private boolean define;
+    private final boolean define;
 
     public WebsocketServerWorker(Builder builder) {
         if (builder.bossThreads == null)
@@ -52,7 +55,7 @@ public class WebsocketServerWorker extends WorkerThread implements NettyNetwork 
         this.websocketPath = builder.websocketPath;
         this.inetPort = builder.inetPort;
         this.defaultHandler = builder.defaultHandler;
-        this.maxContentLength = GlobalConfig.getInstance().getInt(GlobalConfig.NETTY_MAX_CONTENT_LENGTH);
+        this.maxContentLength = DefaultConfig.DeliveryConfig.NETTY_MAX_CONTENT_LENGTH;
         this.server = new ServerBootstrap().group(boss, worker).channel(NioServerSocketChannel.class);
     }
 

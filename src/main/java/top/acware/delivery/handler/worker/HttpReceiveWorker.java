@@ -8,7 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.*;
 import lombok.extern.slf4j.Slf4j;
 import top.acware.delivery.common.callback.Callback;
-import top.acware.delivery.common.config.GlobalConfig;
+import top.acware.delivery.common.config.DefaultConfig;
 import top.acware.delivery.common.exception.BuilderException;
 import top.acware.delivery.common.exception.NetworkException;
 import top.acware.delivery.common.record.StringRecord;
@@ -26,13 +26,17 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
     private final NioEventLoopGroup bossGroup;
     private final NioEventLoopGroup workerGroup;
     private final ServerBootstrap bootstrap;
+    /* Http 请求方式 */
     private final HttpMethod method;
+    /* Http 请求的 URI */
     private final String uri;
     private final Callback<StringRecord> callback;
+    /* 绑定的端口 */
     private final Integer inetPort;
     private boolean setChildHandler = true;
     private boolean setHandler = true;
     private boolean start = false;
+    /* 是否是自定义 */
     private final boolean define;
     private final Integer maxContentLength;
 
@@ -50,7 +54,7 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
         this.uri = builder.uri;
         this.callback = builder.callback;
         this.inetPort = builder.inetPort;
-        this.maxContentLength = GlobalConfig.getInstance().getInt(GlobalConfig.NETTY_MAX_CONTENT_LENGTH);
+        this.maxContentLength = DefaultConfig.DeliveryConfig.NETTY_MAX_CONTENT_LENGTH;
         this.bootstrap = new ServerBootstrap()
                 .group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class);
@@ -60,7 +64,8 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
     public HttpReceiveWorker setHandler(ChannelHandler handler) {
         if (this.setHandler) {
             this.bootstrap.handler(handler);
-            setHandler = false;
+            this.setHandler = false;
+            this.start = true;
         } else {
             log.warn(" You can't invoke this method, because handler has been added ");
         }
@@ -72,6 +77,7 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
         if (this.setChildHandler) {
             this.bootstrap.childHandler(childHandler);
             this.setChildHandler = false;
+            this.start = true;
         } else {
             log.warn(" You can't invoke this method, because handler has been added ");
         }
@@ -93,10 +99,11 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
                             String record = msg.content().toString(StandardCharsets.UTF_8)
                                     .replace("\n", "")
                                     .replace("\t", "")
+                                    .replace("\r", "")
                                     .replace(" ", "");
-                            log.debug("Headers: {}, Method: {}, URI: {}, data: {}",
-                                    msg.headers(), msg.method(), msg.uri(), record);
                             if (method == msg.method() && uri.equals(msg.uri())) {
+                                // 将接收到到数据写入回调函数
+                                log.debug("Record: {}", record);
                                 callback.write(new StringRecord(record));
                                 ctx.writeAndFlush(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK));
                                 ctx.close();
@@ -134,8 +141,8 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
                     pipeline.addLast(handlers);
                 }
             });
-            setChildHandler = false;
-            start = true;
+            this.setChildHandler = false;
+            this.start = true;
         } else {
             log.warn(" You can't invoke this method, because handler has been added or other error ");
         }
@@ -172,7 +179,7 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
         private HttpMethod method;
         private String uri;
         private Callback<StringRecord> callback;
-        private boolean define;
+        private boolean define = true;
 
         public Builder bossThreads(Integer nThreads) {
             this.bossThreads = nThreads;
@@ -205,11 +212,8 @@ public class HttpReceiveWorker extends WorkerThread implements NettyNetwork {
         }
 
         public HttpReceiveWorker builder() {
-            if (this.inetPort == null || this.method == null || this.uri == null || this.callback == null) {
+            if (this.inetPort == null || this.method == null || this.uri == null || this.callback == null)
                 define = false;
-                throw new BuilderException(" Has no initialized data, cannot use the default method  ");
-            } else
-                define = true;
             return new HttpReceiveWorker(this);
         }
     }
