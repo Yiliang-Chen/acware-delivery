@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcWare-Delivery-Demo</title>
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: electronicFont;
+        }
+
+        .element-data {
+            position: relative;
+            height: 100vh;
+        }
+
+        .element-data .show-websock {
+            margin: 0 0 0 10px;
+            position: absolute;
+            /* display: none; */
+        }
+
+        .element-data .show-dataNum {
+            margin: 35px 0 0 10px;
+            position: absolute;
+        }
+
+        .element-data .data-message {
+            height: 500px;
+            overflow: hidden;
+            position: absolute;
+            top: 15vh;
+            left: 10vw;
+        }
+
+        .element-data .data-message .data-msgshow {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 20px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+<div class="element-data">
+    <div class="show-websock">
+        <p id="contain"></p>
+    </div>
+    <div class="show-dataNum">
+        <p id="dataNum"></p>
+    </div>
+    <div class="data-message">
+        <p class="data-msgshow">用户下单了一条</p>
+        <p class="data-msgshow">用户下单了二条</p>
+        <p class="data-msgshow">用户下单了三条</p>
+         <p class="data-msgshow">用户下单了四条</p>
+         <p class="data-msgshow">用户下单了五条</p>
+         <p class="data-msgshow">用户下单了六条</p>
+         <p class="data-msgshow">用户下单了七条</p>
+         <p class="data-msgshow">用户下单了八条</p>
+         <p class="data-msgshow">用户下单了九条</p>
+         <p class="data-msgshow">用户下单了十条</p>
+    </div>
+</div>
+</body>
+
+</html>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script>
+    var socket;
+    var $realTimeData = 0; //初始化数值
+    var dataNum = 0;
+    if (window.WebSocket) {
+        socket = new WebSocket('ws://192.168.31.117:9999/ws');
+        socket.onmessage = function (e) {
+            console.log(e.data);
+            getScrollMsg(e.data);
+        };
+        socket.onopen = function (e) {
+            var obj = document.getElementById('contain');
+            obj.innerHTML = '开启连接...';
+        };
+        socket.onclose = function (e) {
+            console.log(e);
+            var obj = document.getElementById('contain');
+            obj.innerHTML = '关闭连接...'
+        }
+    } else {
+        alert('当前浏览器不支持 websocket')
+    }
+
+    // 获取最新信息
+    function getScrollMsg(str) {
+        dataNum++;
+        var dataNumMsg = document.getElementById('dataNum');
+        dataNumMsg.innerHTML = dataNum;
+        var addmsg = '<p class="data-msgshow">' + str + '</p>' //获取最新消息
+        document.getElementsByClassName('data-message')[0].insertAdjacentHTML('beforeend', addmsg); //添加至信息末尾
+        var length = document.getElementsByClassName('data-msgshow').length;
+        for (var i = length; i > 10; i--) {
+            var firstmsg = document.getElementsByClassName('data-msgshow')[0];
+            var firstmsgHeight = getComputedStyle(firstmsg, null)['height'].split('px')[0]; //获取高度
+            for (var j = firstmsgHeight; j > 0; j -= 10) {
+                firstmsg.style.height = firstmsgHeight - 10 + 'px';
+                firstmsgHeight -= 10;
+                if (firstmsgHeight <= 0) {
+                    document.getElementsByClassName('data-msgshow')[0].remove(); //移除最顶处数据
+                }
+            }
+        }
+
+    }
+</script>

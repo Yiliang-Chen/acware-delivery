@@ -1,0 +1,127 @@
+{
+  "server": {
+    "module": "example-1",
+    "global": {
+      "thread-pool": {
+        "core-pool.size": 6,
+        "max-pool.size": 18,
+        "keep-alive.time": 200,
+        "queue.size": 0
+      }
+    }
+  },
+  "example-1": {
+    "callback": "cache",
+    "callback_limit": 5,
+    "receive": "kafka-example,http-example",
+    "kafka-example": {
+      "type": "kafka",
+      "topic": "kafka",
+      "poll_timeout": 1000,
+      "properties": {
+        "bootstrap.servers": "localhost:9092",
+        "group.id": "example",
+        "enable.auto.commit": true,
+        "auto.commit.interval.ms": 1000,
+        "session.timeout.ms": 30000,
+        "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer",
+        "value.deserializer": "org.apache.kafka.common.serialization.StringDeserializer"
+      }
+    },
+    "http-example": {
+      "type": "http",
+      "bossThreads": 1,
+      "workerThreads": 1,
+      "uri": "/data",
+      "port": 9998,
+      "method": "POST",
+      "max.content.length": 8192
+    },
+    "websocket": {
+      "bossThreads": 1,
+      "workerThreads": 8,
+      "uri": "/ws",
+      "port": 9999,
+      "max.content.length": 8192
+    },
+    "warning": {
+      "global": {
+        "email": {
+          "smtp.hostname": "smtp.sina.com",
+          "smtp.charset": "UTF-8",
+          "smtp.authentication.username": "coca_open@sina.com",
+          "smtp.authentication.password": "11c6527711726503",
+          "smtp.from.email": "coca_open@sina.com",
+          "smtp.from.name": "AcWare-Delivery"
+        }
+      },
+      "rule": {
+        "module": "minus,illegality",
+        "minus": {
+          "expression": "record.getValue() >= '0'",
+          "executor": {
+            "module": "email",
+            "email": {
+              "pattern": "email",
+              "smtp.subject": "AcWare-Delivery 数据负数告警",
+              "smtp.to": "18177410488@163.com,1982455737@qq.com",
+              "smtp.cc": "2720602488@qq.com",
+              "warn.context": "出现负数：%s"
+            }
+          }
+        },
+        "illegality": {
+          "expression": "record.getValue().matches(\"^-?[0-9]+(.[0-9]+)?$\")",
+          "executor": {
+            "module": "email-method,http-method",
+            "email-method": {
+              "pattern": "email",
+              "smtp.subject": "AcWare-Delivery 数据非法告警",
+              "smtp.to": "18177410488@163.com,1982455737@qq.com",
+              "smtp.cc": "2720602488@qq.com",
+              "warn.context": "非法数据：%s"
+            },
+            "http-method": {
+              "pattern": "http",
+              "url": "https://www.baidu.com",
+              "method": "GET",
+              "headers": {
+                "Content-type": "application/json"
+              },
+              "data": {
+                "content": "非法数据：%s",
+                "fields": "field"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example-2": {
+    "callback": "redis",
+    "redis": {
+      "version": "Delivery-offset",
+      "host": "localhost",
+      "port": 6379
+    },
+    "callback_limit": 5,
+    "receive": "http-example",
+    "http-example": {
+      "type": "http",
+      "bossThreads": 1,
+      "workerThreads": 1,
+      "uri": "/data",
+      "port": 9998,
+      "method": "POST",
+      "max.content.length": 8192
+    },
+    "websocket": {
+      "bossThreads": 1,
+      "workerThreads": 8,
+      "uri": "/ws",
+      "port": 9997,
+      "max.content.length": 8192
+    }
+  }
+}
