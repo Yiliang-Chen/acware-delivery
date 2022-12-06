@@ -1,6 +1,6 @@
 {
   "server": {
-    "module": "example-1",
+    "module": "example-1,example-2",
     "global": {
       "thread-pool": {
         "core-pool.size": 6,
@@ -13,6 +13,13 @@
   "example-1": {
     "callback": "cache",
     "callback_limit": 5,
+    "websocket": {
+      "bossThreads": 1,
+      "workerThreads": 8,
+      "uri": "/ws",
+      "port": 9999,
+      "max.content.length": 8192
+    },
     "receive": "kafka-example,http-example",
     "kafka-example": {
       "type": "kafka",
@@ -37,21 +44,14 @@
       "method": "POST",
       "max.content.length": 8192
     },
-    "websocket": {
-      "bossThreads": 1,
-      "workerThreads": 8,
-      "uri": "/ws",
-      "port": 9999,
-      "max.content.length": 8192
-    },
     "warning": {
       "global": {
         "email": {
-          "smtp.hostname": "smtp.sina.com",
+          "smtp.hostname": "smtp.acware.top",
           "smtp.charset": "UTF-8",
-          "smtp.authentication.username": "coca_open@sina.com",
-          "smtp.authentication.password": "11c6527711726503",
-          "smtp.from.email": "coca_open@sina.com",
+          "smtp.authentication.username": "open@acware.top",
+          "smtp.authentication.password": "1234567abc890",
+          "smtp.from.email": "open@acware.top",
           "smtp.from.name": "AcWare-Delivery"
         }
       },
@@ -63,9 +63,9 @@
             "module": "email",
             "email": {
               "pattern": "email",
-              "smtp.subject": "AcWare-Delivery 数据负数告警",
-              "smtp.to": "18177410488@163.com,1982455737@qq.com",
-              "smtp.cc": "2720602488@qq.com",
+              "smtp.subject": "AcWare-Delivery 数据非法告警",
+              "smtp.to": "admin@acware.top,pm@acware.top",
+              "smtp.cc": "rd@acware.top",
               "warn.context": "出现负数：%s"
             }
           }
@@ -77,13 +77,13 @@
             "email-method": {
               "pattern": "email",
               "smtp.subject": "AcWare-Delivery 数据非法告警",
-              "smtp.to": "18177410488@163.com,1982455737@qq.com",
-              "smtp.cc": "2720602488@qq.com",
+              "smtp.to": "admin@acware.top,pm@acware.top",
+              "smtp.cc": "rd@acware.top",
               "warn.context": "非法数据：%s"
             },
             "http-method": {
               "pattern": "http",
-              "url": "https://www.baidu.com",
+              "url": "https://www.acware.top",
               "method": "GET",
               "headers": {
                 "Content-type": "application/json"
@@ -106,22 +106,30 @@
       "port": 6379
     },
     "callback_limit": 5,
-    "receive": "http-example",
-    "http-example": {
-      "type": "http",
-      "bossThreads": 1,
-      "workerThreads": 1,
-      "uri": "/data",
-      "port": 9998,
-      "method": "POST",
-      "max.content.length": 8192
-    },
     "websocket": {
       "bossThreads": 1,
       "workerThreads": 8,
       "uri": "/ws",
       "port": 9997,
       "max.content.length": 8192
+    },
+    "receive": "http-example,mysql-example",
+    "http-example": {
+      "type": "http",
+      "bossThreads": 1,
+      "workerThreads": 1,
+      "uri": "/data",
+      "port": 9996,
+      "method": "POST",
+      "max.content.length": 8192
+    },
+    "mysql-example":{
+      "type": "mysql",
+      "hostname": "localhost",
+      "port": 3306,
+      "username": "root",
+      "password": "123456",
+      "server_id": 1
     }
   }
 }

@@ -38,7 +38,7 @@ public class ModuleConfig {
                 (Integer) websocketConfig.get("workerThreads"),
                 (Integer) websocketConfig.get("port"))
                 .setChildHandler(new DefaultWebsocketChildHandler(
-                        new Sender(callback, warningConfig.warningRule),
+                        new Sender(callback, warningConfig == null ? null : warningConfig.warningRule),
                         (Integer) websocketConfig.get("max.content.length"),
                         (String) websocketConfig.get("uri")
                 ));

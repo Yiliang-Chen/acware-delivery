@@ -25,11 +25,6 @@
             /* display: none; */
         }
 
-        .element-data .show-dataNum {
-            margin: 35px 0 0 10px;
-            position: absolute;
-        }
-
         .element-data .data-message {
             height: 500px;
             overflow: hidden;
@@ -49,46 +44,51 @@
 <body>
 <div class="element-data">
     <div class="show-websock">
-        <p id="contain"></p>
-    </div>
-    <div class="show-dataNum">
+        <p id="contain1"></p>
+        <p id="contain2"></p>
         <p id="dataNum"></p>
     </div>
     <div class="data-message">
-        <p class="data-msgshow">用户下单了一条</p>
-        <p class="data-msgshow">用户下单了二条</p>
-        <p class="data-msgshow">用户下单了三条</p>
-         <p class="data-msgshow">用户下单了四条</p>
-         <p class="data-msgshow">用户下单了五条</p>
-         <p class="data-msgshow">用户下单了六条</p>
-         <p class="data-msgshow">用户下单了七条</p>
-         <p class="data-msgshow">用户下单了八条</p>
-         <p class="data-msgshow">用户下单了九条</p>
-         <p class="data-msgshow">用户下单了十条</p>
+        <p class="data-msgshow">{Delivery 推送第一条}</p>
+        <p class="data-msgshow">{Delivery 推送第二条}</p>
+        <p class="data-msgshow">{Delivery 推送第三条}</p>
     </div>
 </div>
 </body>
 
 </html>
-<script type="text/javascript" src="js/jquery.min.js"></script>
 <script>
-    var socket;
+    var socket1, socket2;
     var $realTimeData = 0; //初始化数值
     var dataNum = 0;
     if (window.WebSocket) {
-        socket = new WebSocket('ws://192.168.31.117:9999/ws');
-        socket.onmessage = function (e) {
+        socket1 = new WebSocket('ws://192.168.31.117:9999/ws');
+        socket2 = new WebSocket('ws://192.168.31.117:9997/ws');
+        socket1.onmessage = function (e) {
             console.log(e.data);
             getScrollMsg(e.data);
         };
-        socket.onopen = function (e) {
-            var obj = document.getElementById('contain');
-            obj.innerHTML = '开启连接...';
+        socket1.onopen = function (e) {
+            var obj = document.getElementById('contain1');
+            obj.innerHTML = '[9999] 开启连接...';
         };
-        socket.onclose = function (e) {
+        socket1.onclose = function (e) {
             console.log(e);
-            var obj = document.getElementById('contain');
-            obj.innerHTML = '关闭连接...'
+            var obj = document.getElementById('contain1');
+            obj.innerHTML = '[9999] 关闭连接...'
+        }
+        socket2.onmessage = function (e) {
+            console.log(e.data);
+            getScrollMsg(e.data);
+        };
+        socket2.onopen = function (e) {
+            var obj = document.getElementById('contain2');
+            obj.innerHTML = '[9997] 开启连接...';
+        };
+        socket2.onclose = function (e) {
+            console.log(e);
+            var obj = document.getElementById('contain2');
+            obj.innerHTML = '[9997] 关闭连接...'
         }
     } else {
         alert('当前浏览器不支持 websocket')

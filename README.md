@@ -38,7 +38,7 @@
 - 1.0.0 版本计划
   - [√] 直接部署模式
   - [√] 模块重构
-  - [] MySQL 更新监听
+  - [√] MySQL 更新监听
 
 - 0.2.0 版本计划
   - [√] Redis Callback
@@ -51,7 +51,7 @@
 
 # 源码编译
 ```shell
-mvn clean package -DMaven.test.skip=true
+mvn clean package -Dmaven.test.skip=true
 ```
 # 配置文件说明
 ## server.json
@@ -59,7 +59,7 @@ mvn clean package -DMaven.test.skip=true
 {
   "server": {
     // 标明下方模块名字，用 ',' 隔开
-    "module": "example-1",
+    "module": "example-1,example-2",
     "global": {
       // 线程池配置
       "thread-pool": {
@@ -120,11 +120,11 @@ mvn clean package -DMaven.test.skip=true
       "global": {
         // email 全局配置，目前只有 email 可配置全局配置
         "email": {
-          "smtp.hostname": "smtp.sina.com",
+          "smtp.hostname": "smtp.acware.top",
           "smtp.charset": "UTF-8",
-          "smtp.authentication.username": "coca_open@sina.com",
-          "smtp.authentication.password": "11c6527711726503",
-          "smtp.from.email": "coca_open@sina.com",
+          "smtp.authentication.username": "open@acware.top",
+          "smtp.authentication.password": "1234567abc890",
+          "smtp.from.email": "open@acware.top",
           "smtp.from.name": "AcWare-Delivery"
         }
       },
@@ -141,9 +141,9 @@ mvn clean package -DMaven.test.skip=true
             "email": {
               // 告警模式，暂时只支持 ["email","http"]，单选，可多配
               "pattern": "email",
-              "smtp.subject": "AcWare-Delivery 数据负数告警",
-              "smtp.to": "18177410488@163.com,1982455737@qq.com",
-              "smtp.cc": "2720602488@qq.com",
+              "smtp.subject": "AcWare-Delivery 数据非法告警",
+              "smtp.to": "admin@acware.top,pm@acware.top",
+              "smtp.cc": "rd@acware.top",
               // 需要添加 %s 接收该条数据
               "warn.context": "出现负数：%s"
             }
@@ -157,14 +157,14 @@ mvn clean package -DMaven.test.skip=true
             "email-method": {
               "pattern": "email",
               "smtp.subject": "AcWare-Delivery 数据非法告警",
-              "smtp.to": "18177410488@163.com,1982455737@qq.com",
-              "smtp.cc": "2720602488@qq.com",
+              "smtp.to": "admin@acware.top,pm@acware.top",
+              "smtp.cc": "rd@acware.top",
               "warn.context": "非法数据：%s"
             },
             // http 告警配置
             "http-method": {
               "pattern": "http",
-              "url": "https://www.baidu.com",
+              "url": "https://www.acware.top",
               // 暂时只支持 ["GET","POST"]，单选
               "method": "GET",
               "headers": {
@@ -179,6 +179,43 @@ mvn clean package -DMaven.test.skip=true
           }
         }
       }
+    }
+  },
+  "example-2": {
+    "callback": "redis",
+    // redis callback 配置
+    "redis": {
+      "version": "Delivery-offset",
+      "host": "localhost",
+      "port": 6379
+    },
+    "callback_limit": 5,
+    "websocket": {
+      "bossThreads": 1,
+      "workerThreads": 8,
+      "uri": "/ws",
+      "port": 9997,
+      "max.content.length": 8192
+    },
+    "receive": "http-example,mysql-example",
+    // http receive 配置
+    "http-example": {
+      "type": "http",
+      "bossThreads": 1,
+      "workerThreads": 1,
+      "uri": "/data",
+      "port": 9996,
+      "method": "POST",
+      "max.content.length": 8192
+    },
+    // mysql receive 配置，需要开启 binlog 监听
+    "mysql-example":{
+      "type": "mysql",
+      "hostname": "localhost",
+      "port": 3306,
+      "username": "root",
+      "password": "123456",
+      "server_id": 1
     }
   }
 }
