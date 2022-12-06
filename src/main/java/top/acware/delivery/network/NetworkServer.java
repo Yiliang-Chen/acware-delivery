@@ -23,6 +23,7 @@ public class NetworkServer extends NetworkThread {
     private final Integer port;
 
     public NetworkServer(Integer bossThreads, Integer workerThreads, Integer port) {
+        log.info("NetworkServer -> boss threads: {}, worker threads: {}, port: {}", bossThreads, workerThreads, port);
         if (bossThreads == null || bossThreads == 0)
             this.boss = new NioEventLoopGroup();
         else

@@ -15,6 +15,9 @@ public class ReceiveFactory {
             case "http": {
                 return new HttpReceive(callback, config);
             }
+            case "mysql": {
+                return new MySQLReceive(callback, config);
+            }
             default: {
                 throw new ConfigException(String.format("ModuleConfig parse %s receive exception", config.get("type")));
             }

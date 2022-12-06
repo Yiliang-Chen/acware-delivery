@@ -1,12 +1,9 @@
 package top.acware.delivery.callback;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import top.acware.delivery.config.global.Constants;
-import top.acware.delivery.exception.CallbackException;
-import top.acware.delivery.record.MapRecord;
+import top.acware.delivery.record.ObjectRecord;
 import top.acware.delivery.record.Record;
 
 import java.util.Map;
@@ -48,9 +45,7 @@ public class RedisCallback implements Callback{
                 if (redis.hexists(VERSION, String.valueOf(position)))
                     break;
             }
-            return new MapRecord(Constants.MAPPER.readValue(redis.hget(VERSION, String.valueOf(position++)), Map.class));
-        } catch (JsonProcessingException e) {
-            throw new CallbackException(e);
+            return new ObjectRecord(redis.hget(VERSION, String.valueOf(position++)));
         } finally {
             log.debug("Read end data, position = {}, offset = {}", position, offset.get());
             readLock.unlock();
@@ -83,10 +78,9 @@ public class RedisCallback implements Callback{
             }
         }
         try (Jedis redis = jedis.getResource()) {
-            redis.hset(VERSION, String.valueOf(offset.getAndIncrement()), Constants.MAPPER.writeValueAsString(data));
-            log.debug(" Write data, position = {}, offset = {}", position, offset.get());
-        } catch (JsonProcessingException e) {
-            throw new CallbackException(e);
+            redis.hset(VERSION, String.valueOf(offset.getAndIncrement()), data.toJsonString());
+            log.debug("Write data, position = {}, offset = {}", position, offset.get());
+            log.debug("Add data -> {} ", data);
         }
     }
 
